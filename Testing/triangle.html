@@ -8,22 +8,25 @@
             margin: 0;
             padding: 0;
         }
-
         #main ,#output{
             width: 800px;
             height: 300px;
             margin: 0 auto;
         }
-
         h1 {
             text-align: center;
         }
+        #output{
+        	font-family: "courier new";
+        	font-size: 30px;
+            padding: 100px 0 0 400px;
+        	}
     </style>
 </head>
 <body>
     <div id="main">
         <h1>法老的金字塔 v1.0</h1>
-        <p>请编写一程序，在网页上打印任意层数金字塔。
+        <p>本程序在网页上实现用 * 打印金字塔。
         </p>
         <p>
         要求如下：
@@ -36,42 +39,56 @@
             <li>如果输入非法字符，请提示用户。</li>
         </ul>
         <hr />
-        <form>
+       
             请输入金字塔的层数：
-            <input type="text" name="level" title="lvl" onkeypress="triangle()"/>
-            <input type="button" value="确定" onclick="doSomething()"/>
-        </form>
+        <input type="text" id="level" title="lvl" placeholder="4"/>
+        <input type="button" value="确定" onclick="triangle()" />
+        
     </div>
-    <div id="output">
-
-    </div>
-    <script>
-    function triangle(maxLevel) {
-        var m = 0;
-        var n = 0;
-
-        for (var level = 0; level < maxLevel; level++) {
-            n = level * 2 + 1;    // n 代表 * 的个数
-            m = 4 - level;        // m 代表空格个数
-            console.log(' ' * m + '*' * n);
-        }
+    <div id="output"></div>
+    <script language="javascript">
+    document.onkeydown=keyListener;  //	用keyListener方法注册按键事件
+    function keyListener(e){		// 	当按下回车键，执行我们的代码
+    	if(e.keyCode == 13){
+     		triangle();
+    	}
+    	
     }
+	function print(n){
+	   	var str = '<pre>';
 
-    function doSomething() {
-        // var lvl = document.getElementsByName('level');
-        /*
-        if num.isnumeric():
-        n = int(num)
-        if n<10 and n>3:
-        triangle(int(n))
-
-        if num.isalpha():
-        if num == '':
-        triangle(4)
-    else:
-        print("请输入3到10之前的数字")
-          */
+		document.getElementById("output").innerHTML = "";
+	   	for (var i=1; i<=n; i++)  {
+			for(var j=1; j<=(n-i); j++)  str += ' ';  // 打印空格
+			for(var k=1; k<=i*2-1; k++)  str += '*';  // 打印星号
+			str += '<br/>';		
+	   	}
+		document.getElementById("output").innerHTML = str;
+	}
+    
+    function err(msg) {
+    	document.getElementById("output").innerHTML = msg;
     }
+    
+	function triangle(){
+		var n = document.getElementById('level').value;   // 代表行数
+		
+	   	if (n >= 3 && n <= 10)	{	//下面是3层到10层打印金字塔
+	   		print(n);
+	   	}
+	   	else if(n == "")	{	//下面是输入为空时，默认打印4层金字塔
+	  		print(4);
+	   	}
+	   	else if(n < 3)	{	//下面是输入小于3时，提示错误
+			err("层数太小，法老住不下！");
+	   	}
+	   	else if(n > 10)	{	//下面是输入大于10时，提示错误
+			err("太高了,没那么多钱!");
+	  	}
+	  	else	{	//下面是输入非法字符时，提示错误
+			err("请输入3到10之间的数字！");
+	  	}
+	}
     </script>
 </body>
 </html>
