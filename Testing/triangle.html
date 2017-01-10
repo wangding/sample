@@ -39,64 +39,56 @@
             <li>如果输入非法字符，请提示用户。</li>
         </ul>
         <hr />
-        <form>
+       
             请输入金字塔的层数：
-            <input type="text" id="level" title="lvl"/>
-            <input type="button" value="确定" onclick="triangle()"/>
-        </form>
-    </div>
-    <div id="output">
-    	
-
-    </div>
-    <script language="javascript">
-    function triangle(){
-       var n=document.getElementById('level').value;   //代表行数
-       var str = '<pre>';
-       
-//下面是3层到10层打印金字塔
-       if (n>=3 && n<=10){
-       for (var i=1;i<=n;i++){
-       	for(var j=1;j<=(n-i);j++){
-       		str += ' ';   
-       	}
-       	for(var k=1;k<=i*2-1;k++){
-       		str += '*';
-       	}
-       	 str += '<br/>';
-       }
-      }
-       
-//下面是输入为空时，默认打印4层金字塔
-        else if(n==""){
-      	for (var i=1;i<=4;i++){
-       	for(var j=1;j<=(4-i);j++){
-       		str += ' ';
-       	}
-       	for(var k=1;k<=i*2-1;k++){
-       		str += '*';
-       	}
-       	str += '<br/>';
-       }
-        }
+        <input type="text" id="level" title="lvl" placeholder="4"/>
+        <input type="button" value="确定" onclick="triangle()" onkeypress="13 "/>
         
-//下面是输入小于3时，提示错误
-      else if(n<3){
-      	str="层数太小，法老住不下！";
-      }
-      
-//下面是输入大于10时，提示错误
-      else if(n>10){
-      	str="太高了,没那么多钱!";
-      }
-      
-//下面是输入非法字符时，提示错误
-      else{
-      	str="请输入3到10之间的数字！";
-      }
-     document.getElementById("output").innerHTML = str;
+    </div>
+    <div id="output"></div>
+    <script language="javascript">
+    document.onkeydown=keyListener;  //	用keyListener方法注册按键事件
+    function keyListener(e){		// 	当按下回车键，执行我们的代码
+    	if(e.keyCode == 13){
+     		triangle();
+    	}
+    	
     }
-    </script>
+	function print(n){
+	   	var str = '<pre>';
 
+		document.getElementById("output").innerHTML = "";
+	   	for (var i=1; i<=n; i++)  {
+			for(var j=1; j<=(n-i); j++)  str += ' ';  // 打印空格
+			for(var k=1; k<=i*2-1; k++)  str += '*';  // 打印星号
+			str += '<br/>';		
+	   	}
+		document.getElementById("output").innerHTML = str;
+	}
+    
+    function err(msg) {
+    	document.getElementById("output").innerHTML = msg;
+    }
+    
+	function triangle(){
+		var n = document.getElementById('level').value;   // 代表行数
+		
+	   	if (n >= 3 && n <= 10)	{	//下面是3层到10层打印金字塔
+	   		print(n);
+	   	}
+	   	else if(n == "")	{	//下面是输入为空时，默认打印4层金字塔
+	  		print(4);
+	   	}
+	   	else if(n < 3)	{	//下面是输入小于3时，提示错误
+			err("层数太小，法老住不下！");
+	   	}
+	   	else if(n > 10)	{	//下面是输入大于10时，提示错误
+			err("太高了,没那么多钱!");
+	  	}
+	  	else	{	//下面是输入非法字符时，提示错误
+			err("请输入3到10之间的数字！");
+	  	}
+	}
+    </script>
 </body>
 </html>
