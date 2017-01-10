@@ -8,16 +8,19 @@
             margin: 0;
             padding: 0;
         }
-
         #main ,#output{
             width: 800px;
             height: 300px;
             margin: 0 auto;
         }
-
         h1 {
             text-align: center;
         }
+        #output{
+        	font-family: "courier new";
+        	font-size: 30px;
+            padding: 100px 0 0 400px;
+        	}
     </style>
 </head>
 <body>
@@ -38,40 +41,62 @@
         <hr />
         <form>
             请输入金字塔的层数：
-            <input type="text" name="level" title="lvl" onkeypress="triangle()"/>
-            <input type="button" value="确定" onclick="doSomething()"/>
+            <input type="text" id="level" title="lvl"/>
+            <input type="button" value="确定" onclick="triangle()"/>
         </form>
     </div>
     <div id="output">
+    	
 
     </div>
-    <script>
-    function triangle(maxLevel) {
-        var m = 0;
-        var n = 0;
-
-        for (var level = 0; level < maxLevel; level++) {
-            n = level * 2 + 1;    // n 代表 * 的个数
-            m = 4 - level;        // m 代表空格个数
-            console.log(' ' * m + '*' * n);
+    <script language="javascript">
+    function triangle(){
+       var n=document.getElementById('level').value;   //代表行数
+       var str = '<pre>';
+       
+//下面是3层到10层打印金字塔
+       if (n>=3 && n<=10){
+       for (var i=1;i<=n;i++){
+       	for(var j=1;j<=(n-i);j++){
+       		str += ' ';   
+       	}
+       	for(var k=1;k<=i*2-1;k++){
+       		str += '*';
+       	}
+       	 str += '<br/>';
+       }
+      }
+       
+//下面是输入为空时，默认打印4层金字塔
+        else if(n==""){
+      	for (var i=1;i<=4;i++){
+       	for(var j=1;j<=(4-i);j++){
+       		str += ' ';
+       	}
+       	for(var k=1;k<=i*2-1;k++){
+       		str += '*';
+       	}
+       	str += '<br/>';
+       }
         }
-    }
-
-    function doSomething() {
-        // var lvl = document.getElementsByName('level');
-        /*
-        if num.isnumeric():
-        n = int(num)
-        if n<10 and n>3:
-        triangle(int(n))
-
-        if num.isalpha():
-        if num == '':
-        triangle(4)
-    else:
-        print("请输入3到10之前的数字")
-          */
+        
+//下面是输入小于3时，提示错误
+      else if(n<3){
+      	str="层数太小，法老住不下！";
+      }
+      
+//下面是输入大于10时，提示错误
+      else if(n>10){
+      	str="太高了,没那么多钱!";
+      }
+      
+//下面是输入非法字符时，提示错误
+      else{
+      	str="请输入3到10之间的数字！";
+      }
+     document.getElementById("output").innerHTML = str;
     }
     </script>
+
 </body>
 </html>
