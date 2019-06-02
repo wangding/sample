@@ -1,0 +1,250 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>第二章：自动化构建 · SPA 富应用开发</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="王顶">
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-bsz/bsz.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-gtalk/gtalk.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="task03.html" />
+    
+    
+    <link rel="prev" href="task01.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    简介
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="task01.html">
+            
+                <a href="task01.html">
+            
+                    
+                    第一章：课程说明
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="task02.html">
+            
+                <a href="task02.html">
+            
+                    
+                    第二章：自动化构建
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="task03.html">
+            
+                <a href="task03.html">
+            
+                    
+                    第三章：UI 概述
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >第二章：自动化构建</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x7B2C;-2-&#x7AE0;&#xFF1A;&#x81EA;&#x52A8;&#x5316;&#x6784;&#x5EFA;">&#x7B2C; 2 &#x7AE0;&#xFF1A;&#x81EA;&#x52A8;&#x5316;&#x6784;&#x5EFA;</h1>
+<h2 id="&#x9605;&#x8BFB;&#x53C2;&#x8003;&#x8D44;&#x6599;">&#x9605;&#x8BFB;&#x53C2;&#x8003;&#x8D44;&#x6599;</h2>
+<ul>
+<li>&#x81EA;&#x52A8;&#x5316;&#x6784;&#x5EFA;&#xFF1A;<a href="https://en.wikipedia.org/wiki/Build_automation" target="_blank">https://en.wikipedia.org/wiki/Build_automation</a></li>
+<li>&#x6301;&#x7EED;&#x96C6;&#x6210;&#xFF1A;<a href="https://en.wikipedia.org/wiki/Continuous_integration" target="_blank">https://en.wikipedia.org/wiki/Continuous_integration</a></li>
+<li>Grunt&#xFF1A;<a href="https://www.gruntjs.net/" target="_blank">https://www.gruntjs.net/</a></li>
+<li>Travis-CI: <a href="https://travis-ci.org/" target="_blank">https://travis-ci.org/</a></li>
+<li>Google PageSpeed Insights: <a href="https://developers.google.com/speed/pagespeed/insights/" target="_blank">https://developers.google.com/speed/pagespeed/insights/</a></li>
+<li>&#x7AD9;&#x957F;&#x5DE5;&#x5177;&#xFF1A;<a href="http://tool.chinaz.com/" target="_blank">http://tool.chinaz.com/</a></li>
+</ul>
+<h2 id="&#x5728;&#x7EBF;&#x7535;&#x5B50;&#x4E66;">&#x5728;&#x7EBF;&#x7535;&#x5B50;&#x4E66;</h2>
+<p>&#x8981;&#x6C42;&#xFF1A;</p>
+<ul>
+<li>&#x5728; GitHub &#x4E0A;&#x521B;&#x5EFA; book &#x4ED3;&#x5E93;</li>
+<li>&#x5728; book &#x4ED3;&#x5E93;&#x7684; master &#x5206;&#x652F;&#x653E;&#x7F6E;&#x7535;&#x5B50;&#x4E66;&#x7684;&#x7AE0;&#x8282;&#x548C;&#x76EE;&#x5F55;&#x7684; MarkDown &#x6587;&#x6863;</li>
+<li>&#x5728; book &#x4ED3;&#x5E93;&#x7684; gh-pages &#x5206;&#x652F;&#x653E;&#x7F6E; gitbook build &#x540E;&#x7684; HTML &#x6587;&#x4EF6;</li>
+<li>&#x7535;&#x5B50;&#x4E66;&#x7684;&#x524D;&#x4E24;&#x7AE0;&#x7528;&#x624B;&#x52A8;&#x6784;&#x5EFA;&#xFF0C;&#x5E76;&#x5B8C;&#x6210;&#x7B2C;&#x4E00;&#x6B21;&#x53D1;&#x5E03;&#x4E0A;&#x7EBF;</li>
+<li>&#x7528; Chrome &#x6D4F;&#x89C8;&#x5668;&#x67E5;&#x770B;&#x5728;&#x7EBF;&#x7535;&#x5B50;&#x4E66;</li>
+<li>&#x589E;&#x52A0;&#x7535;&#x5B50;&#x4E66;&#x7684;&#x7B2C;&#x4E09;&#x7AE0;&#xFF0C;&#x7EE7;&#x7EED;&#x4F7F;&#x7528;&#x624B;&#x52A8;&#x6784;&#x5EFA;&#xFF0C;&#x5E76;&#x5B8C;&#x6210;&#x7B2C;&#x4E8C;&#x6B21;&#x53D1;&#x5E03;&#x4E0A;&#x7EBF;</li>
+<li>&#x7528; Chrome &#x6D4F;&#x89C8;&#x5668;&#x67E5;&#x770B;&#x66F4;&#x65B0;&#x540E;&#x7684;&#x7535;&#x5B50;&#x4E66;</li>
+<li>&#x4F53;&#x9A8C;&#x624B;&#x52A8;&#x6784;&#x5EFA;&#x7684;&#x7E41;&#x7410;&#xFF0C;&#x8003;&#x8651;&#x54EA;&#x4E9B;&#x6784;&#x5EFA;&#x8FC7;&#x7A0B;&#x53EF;&#x4EE5;&#x81EA;&#x52A8;&#x5316;&#x5B8C;&#x6210;</li>
+<li>&#x9605;&#x8BFB; <a href="https://segmentfault.com/a/1190000015274243" target="_blank">Travis-CI gh-gage &#x81EA;&#x52A8;&#x90E8;&#x7F72;&#x6587;&#x7AE0;</a>
+<footer class="page-footer"><span class="page-footer-copyright">2018&#xA0;-&#xA0;<span class="bsz-this-year"></span>&#xA0;by&#xA0;<a href="https://i.wangding.in" target="_blank">&#x738B;&#x9876;</a>.&#xA0;All rights reserved.</span><span class="page-footer-footer-update"><span id="busuanzi_container_site_uv">&#x672C;&#x7AD9;&#x8BBF;&#x5BA2;&#x4EBA;&#x6570;&#xA0;<span id="busuanzi_value_site_uv"></span>&#xA0;&#x4EBA;&#x6B21;</span></span></footer><script>document.getElementsByClassName("bsz-this-year")[0].innerHTML = new Date().getFullYear(); </script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></li>
+</ul>
+<p><div id="gitalk-container"></div><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script>window.onload = function() {gitbook.events.on("page.change", function() {var gitalk;if(typeof gitalk === "undefined") {gitalk = new Gitalk({"clientID":"38298dfccbd34894f5af","clientSecret":"021ecfcb4802128f421d11acd9e852f2164df232","repo":"sample","owner":"wangding","admin":["wangding"],"id":"task02.html"});}gitalk.render("gitalk-container");});};var gitalk;if(typeof gitalk === "undefined") {gitalk = new Gitalk({"clientID":"38298dfccbd34894f5af","clientSecret":"021ecfcb4802128f421d11acd9e852f2164df232","repo":"sample","owner":"wangding","admin":["wangding"],"id":"task02.html"});}gitalk.render("gitalk-container");</script></p>
+
+                                
+                                </section>
+                            
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="task01.html" class="navigation navigation-prev " aria-label="Previous page: 第一章：课程说明">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="task03.html" class="navigation navigation-next " aria-label="Next page: 第三章：UI 概述">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"第二章：自动化构建","level":"1.3","depth":1,"next":{"title":"第三章：UI 概述","level":"1.4","depth":1,"path":"task03.md","ref":"task03.md","articles":[]},"previous":{"title":"第一章：课程说明","level":"1.2","depth":1,"path":"task01.md","ref":"task01.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","-highlight","-sharing","bsz","gtalk"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"bsz":{"copyright":"2018&nbsp;-&nbsp;<span class=\"bsz-this-year\"></span>&nbsp;by&nbsp;<a href=\"https://i.wangding.in\">王顶</a>.&nbsp;All rights reserved."},"gtalk":{"clientID":"38298dfccbd34894f5af","clientSecret":"021ecfcb4802128f421d11acd9e852f2164df232","repo":"sample","owner":"wangding","admin":["wangding"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"王顶","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"SPA 富应用开发","language":"zh-hans","gitbook":"*","description":"SPA 富应用开发课程资料"},"file":{"path":"task02.md","mtime":"2019-06-04T03:48:20.711Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-06-10T02:22:25.581Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
