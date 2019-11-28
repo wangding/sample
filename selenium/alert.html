@@ -24,6 +24,9 @@
       var response = prompt("正在学习的这个 web 自动化测试工具是什么？","Selenium IDE");
       output(response);
     }
+    function show_window(){
+      open('https://www.baidu.com');
+    }
    </script>
 </head>
 <body>
@@ -32,6 +35,7 @@
   <input type="button" id="btnAlert" onclick="show_alert()" value="显示 alert 弹窗" />    
   <input type="button" id="btnConfirm" onclick="show_confirm()" value="显示 confirm 弹窗" />
   <input type="button" id="btnPrompt" onclick="show_prompt()" value="显示 prompt 弹窗" />
+  <input type="button" id="btnWindow" onclick="show_window()" value="显示新标签页" />
   <hr />
   <p id="output">  </p>
 </body>
