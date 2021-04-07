@@ -1,0 +1,35 @@
+.border-radius(@value) {
+  -webkit-border-radius: @value;
+  -moz-border-radius: @value;
+  border-radius: @value;
+  background-clip: padding-box;
+}
+
+.box-size(@color) {
+  width: 300px;
+  height: 100px;
+  background: @color;
+  border: 1px solid;
+  color: white;
+}
+
+.slightly-rounded {
+  .box-size(green);
+  .border-radius(5px);
+}
+
+.very-rounded {
+  .box-size(blue);
+  .border-radius(16px);
+}
+
+@yellowish: #FFC;
+
+a{
+  background-color: @yellowish;
+}
+
+blockquote {
+  background-color: #333;
+  color: @yellowish;
+}
