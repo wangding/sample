@@ -1,0 +1,23 @@
+{
+  "name": "sample",
+  "version": "1.0.0",
+  "description": "一些网页小样",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangding/sample.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wangding/sample/issues"
+  },
+  "homepage": "https://github.com/wangding/sample#readme",
+  "devDependencies": {
+    "@wangding/grunt-qiniu-qupload": "^0.2.1",
+    "grunt": "^1.5.3"
+  }
+}

@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - "10"
+
+after_script:
+  - mkdir dist
+  - mv images  dist
+  - mv img-svg dist
+  - mv nodejs  dist
+  - mv spa     dist
+  - mv testing dist
+  - mv web     dist
+  - mv selenium dist
+  - grunt upload
+
+branches:
+  only:
+    - master
