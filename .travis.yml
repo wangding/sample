@@ -11,7 +11,7 @@ after_script:
   - mv testing dist
   - mv web     dist
   - mv selenium dist
-  - mv database dist
+  - mv dbms     dist
   - grunt upload
 
 branches:
