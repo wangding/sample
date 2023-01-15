@@ -12,6 +12,7 @@ after_script:
   - mv web     dist
   - mv selenium dist
   - mv dbms     dist
+  - mv mysql01  dist
   - grunt upload
 
 branches:

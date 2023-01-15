@@ -1,0 +1,967 @@
+<!DOCTYPE HTML><html lang="zh-hans"><head><meta charset="UTF-8"><meta content="text/html; charset=utf-8" http-equiv="Content-Type"><title>第13章_约束 · MySQL 基础教案</title><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content=""><meta name="generator" content="GitBook 3.2.3"><meta name="author" content="王顶"><link rel="stylesheet" href="../gitbook/style.css"><link rel="stylesheet" href="../gitbook/gitbook-plugin-search-plus/search.css"><link rel="stylesheet" href="../gitbook/gitbook-plugin-anchor-navigation-ex/style/plugin.css"><link rel="stylesheet" href="../gitbook/gitbook-plugin-prism/prism.css"><link rel="stylesheet" href="../gitbook/gitbook-plugin-splitter/splitter.css"><link rel="stylesheet" href="../gitbook/gitbook-plugin-image-captions-extended/image-captions.css"><link rel="stylesheet" href="../gitbook/gitbook-plugin-fancybox/jquery.fancybox.css"><link rel="stylesheet" href="../gitbook/gitbook-plugin-fancybox/jquery.fancybox-buttons.css"><link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css"><link rel="stylesheet" href="../styles/website.css"><meta name="HandheldFriendly" content="true"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png"><link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon"><link rel="next" href="14.html"><link rel="prev" href="12.html"></head><body><div class="book"><div class="book-summary"><div id="book-search-input" role="search"><input type="text" placeholder="输入并搜索"></div><nav role="navigation"><ul class="summary"><li class="chapter" data-level="1.1" data-path="../"><a href="../">简介</a></li><li class="chapter" data-level="1.2" data-path="00.html"><a href="00.html">第00章_写在前面</a></li><li class="chapter" data-level="1.3" data-path="01.html"><a href="01.html">第01章_数据库概述</a></li><li class="chapter" data-level="1.4" data-path="02.html"><a href="02.html">第02章_MySQL环境搭建</a></li><li class="chapter" data-level="1.5" data-path="03.html"><a href="03.html">第03章_基本的SELECT语句</a></li><li class="chapter" data-level="1.6" data-path="04.html"><a href="04.html">第04章_运算符</a></li><li class="chapter" data-level="1.7" data-path="05.html"><a href="05.html">第05章_排序与分页</a></li><li class="chapter" data-level="1.8" data-path="06.html"><a href="06.html">第06章_多表查询</a></li><li class="chapter" data-level="1.9" data-path="07.html"><a href="07.html">第07章_单行函数</a></li><li class="chapter" data-level="1.10" data-path="08.html"><a href="08.html">第08章_聚合函数</a></li><li class="chapter" data-level="1.11" data-path="09.html"><a href="09.html">第09章_子查询</a></li><li class="chapter" data-level="1.12" data-path="10.html"><a href="10.html">第10章_创建和管理表</a></li><li class="chapter" data-level="1.13" data-path="11.html"><a href="11.html">第11章_数据处理之增删改</a></li><li class="chapter" data-level="1.14" data-path="12.html"><a href="12.html">第12章_MySQL数据类型精讲</a></li><li class="chapter active" data-level="1.15" data-path="13.html"><a href="13.html">第13章_约束</a></li><li class="chapter" data-level="1.16" data-path="14.html"><a href="14.html">第14章_视图</a></li><li class="chapter" data-level="1.17" data-path="15.html"><a href="15.html">第15章_存储过程与函数</a></li><li class="chapter" data-level="1.18" data-path="16.html"><a href="16.html">第16章_变量、流程控制与游标</a></li><li class="chapter" data-level="1.19" data-path="17.html"><a href="17.html">第17章_触发器</a></li><li class="chapter" data-level="1.20" data-path="18.html"><a href="18.html">第18章_MySQL8其它新特性</a></li><li class="divider"></li><li><a href="https://www.gitbook.com" target="blank" class="gitbook-link">本书使用 GitBook 发布</a></li></ul></nav></div><div class="book-body"><div class="body-inner"><div class="book-header" role="navigation"><!-- Title --><h1><i class="fa fa-circle-o-notch fa-spin"></i> <a href="..">第13章_约束</a></h1></div><div class="page-wrapper" tabindex="-1" role="main"><div class="page-inner"><div class="search-plus" id="book-search-results"><div class="search-noresults"><section class="normal markdown-section"><div id="anchor-navigation-ex-navbar"><i class="fa fa-navicon"></i><ul><li><span class="title-icon"></span><a href="#第13章约束"><b> </b>第13章_约束</a></li><ul><li><span class="title-icon"></span><a href="#1-约束constraint概述"><b>1. </b>1. 约束(constraint)概述</a></li><ul><li><span class="title-icon"></span><a href="#11-为什么需要约束"><b>1.1. </b>1.1 为什么需要约束</a></li><li><span class="title-icon"></span><a href="#12-什么是约束"><b>1.2. </b>1.2 什么是约束</a></li><li><span class="title-icon"></span><a href="#13-约束的分类"><b>1.3. </b>1.3 约束的分类</a></li></ul><li><span class="title-icon"></span><a href="#2-非空约束"><b>2. </b>2. 非空约束</a></li><ul><li><span class="title-icon"></span><a href="#21-作用"><b>2.1. </b>2.1 作用</a></li><li><span class="title-icon"></span><a href="#22-关键字"><b>2.2. </b>2.2 关键字</a></li><li><span class="title-icon"></span><a href="#23-特点"><b>2.3. </b>2.3 特点</a></li><li><span class="title-icon"></span><a href="#24-添加非空约束"><b>2.4. </b>2.4 添加非空约束</a></li><li><span class="title-icon"></span><a href="#25-删除非空约束"><b>2.5. </b>2.5 删除非空约束</a></li></ul><li><span class="title-icon"></span><a href="#3-唯一性约束"><b>3. </b>3. 唯一性约束</a></li><ul><li><span class="title-icon"></span><a href="#31-作用"><b>3.1. </b>3.1 作用</a></li><li><span class="title-icon"></span><a href="#32-关键字"><b>3.2. </b>3.2 关键字</a></li><li><span class="title-icon"></span><a href="#33-特点"><b>3.3. </b>3.3 特点</a></li><li><span class="title-icon"></span><a href="#34-添加唯一约束"><b>3.4. </b>3.4 添加唯一约束</a></li><li><span class="title-icon"></span><a href="#35-关于复合唯一约束"><b>3.5. </b>3.5 关于复合唯一约束</a></li><li><span class="title-icon"></span><a href="#35-删除唯一约束"><b>3.6. </b>3.5 删除唯一约束</a></li></ul><li><span class="title-icon"></span><a href="#4-primary-key-约束"><b>4. </b>4. PRIMARY KEY 约束</a></li><ul><li><span class="title-icon"></span><a href="#41-作用"><b>4.1. </b>4.1 作用</a></li><li><span class="title-icon"></span><a href="#42-关键字"><b>4.2. </b>4.2 关键字</a></li><li><span class="title-icon"></span><a href="#43-特点"><b>4.3. </b>4.3 特点</a></li><li><span class="title-icon"></span><a href="#44-添加主键约束"><b>4.4. </b>4.4 添加主键约束</a></li><li><span class="title-icon"></span><a href="#45-关于复合主键"><b>4.5. </b>4.5 关于复合主键</a></li><li><span class="title-icon"></span><a href="#46-删除主键约束"><b>4.6. </b>4.6 删除主键约束</a></li></ul><li><span class="title-icon"></span><a href="#5-自增列：autoincrement"><b>5. </b>5. 自增列：AUTO_INCREMENT</a></li><ul><li><span class="title-icon"></span><a href="#51-作用"><b>5.1. </b>5.1 作用</a></li><li><span class="title-icon"></span><a href="#52-关键字"><b>5.2. </b>5.2 关键字</a></li><li><span class="title-icon"></span><a href="#53-特点和要求"><b>5.3. </b>5.3 特点和要求</a></li><li><span class="title-icon"></span><a href="#54-如何指定自增约束"><b>5.4. </b>5.4 如何指定自增约束</a></li><li><span class="title-icon"></span><a href="#55-如何删除自增约束"><b>5.5. </b>5.5 如何删除自增约束</a></li><li><span class="title-icon"></span><a href="#56-mysql-80新特性—自增变量的持久化"><b>5.6. </b>5.6 MySQL 8.0新特性—自增变量的持久化</a></li></ul><li><span class="title-icon"></span><a href="#6-foreign-key-约束"><b>6. </b>6. FOREIGN KEY 约束</a></li><ul><li><span class="title-icon"></span><a href="#61-作用"><b>6.1. </b>6.1 作用</a></li><li><span class="title-icon"></span><a href="#62-关键字"><b>6.2. </b>6.2 关键字</a></li><li><span class="title-icon"></span><a href="#63-主表和从表父表和子表"><b>6.3. </b>6.3 主表和从表/父表和子表</a></li><li><span class="title-icon"></span><a href="#64-特点"><b>6.4. </b>6.4 特点</a></li><li><span class="title-icon"></span><a href="#65-添加外键约束"><b>6.5. </b>6.5 添加外键约束</a></li><li><span class="title-icon"></span><a href="#66-演示问题"><b>6.6. </b>6.6 演示问题</a></li><li><span class="title-icon"></span><a href="#67-约束等级"><b>6.7. </b>6.7 约束等级</a></li><li><span class="title-icon"></span><a href="#68-删除外键约束"><b>6.8. </b>6.8 删除外键约束</a></li><li><span class="title-icon"></span><a href="#69-开发场景"><b>6.9. </b>6.9 开发场景</a></li><li><span class="title-icon"></span><a href="#610-阿里开发规范"><b>6.10. </b>6.10 阿里开发规范</a></li></ul><li><span class="title-icon"></span><a href="#7-check-约束"><b>7. </b>7. CHECK 约束</a></li><ul><li><span class="title-icon"></span><a href="#71-作用"><b>7.1. </b>7.1 作用</a></li><li><span class="title-icon"></span><a href="#2、关键字"><b>7.2. </b>2、关键字</a></li><li><span class="title-icon"></span><a href="#3、说明：mysql-57-不支持"><b>7.3. </b>3、说明：MySQL 5.7 不支持</a></li></ul><li><span class="title-icon"></span><a href="#8-default约束"><b>8. </b>8. DEFAULT约束</a></li><ul><li><span class="title-icon"></span><a href="#81-作用"><b>8.1. </b>8.1 作用</a></li><li><span class="title-icon"></span><a href="#82-关键字"><b>8.2. </b>8.2 关键字</a></li><li><span class="title-icon"></span><a href="#83-如何给字段加默认值"><b>8.3. </b>8.3 如何给字段加默认值</a></li><li><span class="title-icon"></span><a href="#84-如何删除默认值约束"><b>8.4. </b>8.4 如何删除默认值约束</a></li></ul><li><span class="title-icon"></span><a href="#9-面试"><b>9. </b>9. 面试</a></li></ul></ul></div><a href="#第13章约束" id="anchorNavigationExGoTop"><i class="fa fa-arrow-up"></i></a><h1 id="第13章约束"><a name="第13章约束" class="anchor-navigation-ex-anchor" href="#第13章约束"><i class="fa fa-link" aria-hidden="true"></i></a> 第13章_约束</h1><h2 id="1-约束constraint概述"><a name="1-约束constraint概述" class="anchor-navigation-ex-anchor" href="#1-约束constraint概述"><i class="fa fa-link" aria-hidden="true"></i></a>1. 1. 约束(constraint)概述</h2><h3 id="11-为什么需要约束"><a name="11-为什么需要约束" class="anchor-navigation-ex-anchor" href="#11-为什么需要约束"><i class="fa fa-link" aria-hidden="true"></i></a>1.1. 1.1 为什么需要约束</h3><p>数据完整性（Data Integrity）是指数据的精确性（Accuracy）和可靠性（Reliability）。它是防止数据库中存在不符合语义规定的数据和防止因错误信息的输入输出造成无效操作或错误信息而提出的。</p><p>为了保证数据的完整性，SQL规范以约束的方式对<strong>表数据进行额外的条件限制</strong>。从以下四个方面考虑：</p><ul><li><code>实体完整性（Entity Integrity）</code>：例如，同一个表中，不能存在两条完全相同无法区分的记录</li><li><code>域完整性（Domain Integrity）</code>：例如：年龄范围0-120，性别范围“男/女”</li><li><code>引用完整性（Referential Integrity）</code>：例如：员工所在部门，在部门表中要能找到这个部门</li><li><code>用户自定义完整性（User-defined Integrity）</code>：例如：用户名唯一、密码不能为空等，本部门经理的工资不得高于本部门职工的平均工资的5倍。</li></ul><h3 id="12-什么是约束"><a name="12-什么是约束" class="anchor-navigation-ex-anchor" href="#12-什么是约束"><i class="fa fa-link" aria-hidden="true"></i></a>1.2. 1.2 什么是约束</h3><p>约束是表级的强制规定。</p><p>可以在<strong>创建表时规定约束（通过 CREATE TABLE 语句）</strong>，或者在<strong>表创建之后通过 ALTER TABLE 语句规定约束</strong>。</p><h3 id="13-约束的分类"><a name="13-约束的分类" class="anchor-navigation-ex-anchor" href="#13-约束的分类"><i class="fa fa-link" aria-hidden="true"></i></a>1.3. 1.3 约束的分类</h3><ul><li><strong>根据约束数据列的限制，</strong>约束可分为：<ul><li><strong>单列约束</strong>：每个约束只约束一列</li><li><strong>多列约束</strong>：每个约束可约束多列数据</li></ul></li><li><strong>根据约束的作用范围</strong>，约束可分为：<ul><li><strong>列级约束</strong>：只能作用在一个列上，跟在列的定义后面</li><li><strong>表级约束</strong>：可以作用在多个列上，不与列一起，而是单独定义</li></ul></li></ul><pre class="language-"><code>            位置            支持的约束类型                    是否可以起约束名
+列级约束：    列的后面        语法都支持，但外键没有效果        不可以
+表级约束：    所有列的下面       默认和非空不支持，其他支持       可以（主键没有效果）
+</code></pre><ul><li><strong>根据约束起的作用</strong>，约束可分为：<ul><li><strong>NOT NULL</strong> <strong>非空约束，规定某个字段不能为空</strong></li><li><strong>UNIQUE</strong> <strong>唯一约束</strong>，<strong>规定某个字段在整个表中是唯一的</strong></li><li><strong>PRIMARY KEY 主键(非空且唯一)约束</strong></li><li><strong>FOREIGN KEY</strong> <strong>外键约束</strong></li><li><strong>CHECK</strong> <strong>检查约束</strong></li><li><strong>DEFAULT</strong> <strong>默认值约束</strong></li></ul></li></ul><blockquote><p>注意： MySQL不支持check约束，但可以使用check约束，而没有任何效果</p></blockquote><ul><li>查看某个表已有的约束</li></ul><pre class="language-"><code class="lang-mysql">#information_schema数据库名（系统库）
+#table_constraints表名称（专门存储各个表的约束）
+SELECT * FROM information_schema.table_constraints 
+WHERE table_name = &apos;表名称&apos;;
+</code></pre><h2 id="2-非空约束"><a name="2-非空约束" class="anchor-navigation-ex-anchor" href="#2-非空约束"><i class="fa fa-link" aria-hidden="true"></i></a>2. 2. 非空约束</h2><h3 id="21-作用"><a name="21-作用" class="anchor-navigation-ex-anchor" href="#21-作用"><i class="fa fa-link" aria-hidden="true"></i></a>2.1. 2.1 作用</h3><p>限定某个字段/某列的值不允许为空</p><figure id="fig1.15.1"><a href="images/1555426972098.png" rel="grouped" title="1555426972098" target="_self" class="fancybox"><div class="image-wrapper"><img src="images/1555426972098.png" alt="1555426972098"></div></a><figcaption>图：1555426972098</figcaption></figure><h3 id="22-关键字"><a name="22-关键字" class="anchor-navigation-ex-anchor" href="#22-关键字"><i class="fa fa-link" aria-hidden="true"></i></a>2.2. 2.2 关键字</h3><p>NOT NULL</p><h3 id="23-特点"><a name="23-特点" class="anchor-navigation-ex-anchor" href="#23-特点"><i class="fa fa-link" aria-hidden="true"></i></a>2.3. 2.3 特点</h3><ul><li>默认，所有的类型的值都可以是NULL，包括INT、FLOAT等数据类型</li><li><p>非空约束只能出现在表对象的列上，只能某个列单独限定非空，不能组合非空</p></li><li><p>一个表可以有很多列都分别限定了非空</p></li><li><p>空字符串&apos;&apos;不等于NULL，0也不等于NULL</p></li></ul><h3 id="24-添加非空约束"><a name="24-添加非空约束" class="anchor-navigation-ex-anchor" href="#24-添加非空约束"><i class="fa fa-link" aria-hidden="true"></i></a>2.4. 2.4 添加非空约束</h3><p>（1）建表时</p><pre class="language-"><code class="lang-mysql">CREATE TABLE 表名称(
+    字段名  数据类型,
+    字段名  数据类型 NOT NULL,  
+    字段名  数据类型 NOT NULL
+);
+</code></pre><p>举例：</p><pre class="language-"><code class="lang-mysql">CREATE TABLE emp(
+id INT(10) NOT NULL,
+NAME VARCHAR(20) NOT NULL,
+sex CHAR NULL
+);
+</code></pre><pre class="language-"><code class="lang-mysql">CREATE TABLE student(
+    sid int,
+    sname varchar(20) not null,
+    tel char(11) ,
+    cardid char(18) not null
+);
+</code></pre><pre class="language-"><code class="lang-mysql">insert into student values(1,&apos;张三&apos;,&apos;13710011002&apos;,&apos;110222198912032545&apos;); #成功
+
+insert into student values(2,&apos;李四&apos;,&apos;13710011002&apos;,null);#身份证号为空
+ERROR 1048 (23000): Column &apos;cardid&apos; cannot be null
+
+insert into student values(2,&apos;李四&apos;,null,&apos;110222198912032546&apos;);#成功，tel允许为空
+
+insert into student values(3,null,null,&apos;110222198912032547&apos;);#失败
+ERROR 1048 (23000): Column &apos;sname&apos; cannot be null
+</code></pre><p>（2）建表后</p><pre class="language-"><code class="lang-mysql">alter table 表名称 modify 字段名 数据类型 not null;
+</code></pre><p>举例：</p><pre class="language-"><code class="lang-mysql">ALTER TABLE emp
+MODIFY sex VARCHAR(30) NOT NULL;
+</code></pre><pre class="language-"><code class="lang-mysql">alter table student modify sname varchar(20) not null;
+</code></pre><h3 id="25-删除非空约束"><a name="25-删除非空约束" class="anchor-navigation-ex-anchor" href="#25-删除非空约束"><i class="fa fa-link" aria-hidden="true"></i></a>2.5. 2.5 删除非空约束</h3><pre class="language-"><code class="lang-mysql">alter table 表名称 modify 字段名 数据类型 NULL;#去掉not null，相当于修改某个非注解字段，该字段允许为空
+
+或 
+
+alter table 表名称 modify 字段名 数据类型;#去掉not null，相当于修改某个非注解字段，该字段允许为空
+</code></pre><p>举例：</p><pre class="language-"><code class="lang-mysql">ALTER TABLE emp
+MODIFY sex VARCHAR(30) NULL;
+</code></pre><pre class="language-"><code class="lang-mysql">ALTER TABLE emp
+MODIFY NAME VARCHAR(15) DEFAULT &apos;abc&apos; NULL;
+</code></pre><h2 id="3-唯一性约束"><a name="3-唯一性约束" class="anchor-navigation-ex-anchor" href="#3-唯一性约束"><i class="fa fa-link" aria-hidden="true"></i></a>3. 3. 唯一性约束</h2><h3 id="31-作用"><a name="31-作用" class="anchor-navigation-ex-anchor" href="#31-作用"><i class="fa fa-link" aria-hidden="true"></i></a>3.1. 3.1 作用</h3><p>用来限制某个字段/某列的值不能重复。</p><p><a href="images/1555427198811.png" rel="grouped" title="1555427198811" target="_self" class="fancybox"><div class="image-wrapper"><img src="images/1555427198811.png" alt="1555427198811"></div></a></p><h3 id="32-关键字"><a name="32-关键字" class="anchor-navigation-ex-anchor" href="#32-关键字"><i class="fa fa-link" aria-hidden="true"></i></a>3.2. 3.2 关键字</h3><p>UNIQUE</p><h3 id="33-特点"><a name="33-特点" class="anchor-navigation-ex-anchor" href="#33-特点"><i class="fa fa-link" aria-hidden="true"></i></a>3.3. 3.3 特点</h3><ul><li>同一个表可以有多个唯一约束。</li><li>唯一约束可以是某一个列的值唯一，也可以多个列组合的值唯一。</li><li>唯一性约束允许列值为空。</li><li>在创建唯一约束的时候，如果不给唯一约束命名，就默认和列名相同。</li><li><strong>MySQL会给唯一约束的列上默认创建一个唯一索引。</strong></li></ul><h3 id="34-添加唯一约束"><a name="34-添加唯一约束" class="anchor-navigation-ex-anchor" href="#34-添加唯一约束"><i class="fa fa-link" aria-hidden="true"></i></a>3.4. 3.4 添加唯一约束</h3><p>（1）建表时</p><pre class="language-"><code class="lang-mysql">create table 表名称(
+    字段名  数据类型,
+    字段名  数据类型  unique,  
+    字段名  数据类型  unique key,
+    字段名  数据类型
+);
+create table 表名称(
+    字段名  数据类型,
+    字段名  数据类型,  
+    字段名  数据类型,
+    [constraint 约束名] unique key(字段名)
+);
+</code></pre><p>举例：</p><pre class="language-"><code class="lang-mysql">create table student(
+    sid int,
+    sname varchar(20),
+    tel char(11) unique,
+    cardid char(18) unique key
+);
+</code></pre><pre class="language-"><code class="lang-mysql">CREATE TABLE t_course(
+    cid INT UNIQUE,
+    cname VARCHAR(100) UNIQUE,
+    description VARCHAR(200)
+);
+</code></pre><pre class="language-"><code class="lang-mysql">CREATE TABLE USER(
+ id INT NOT NULL,
+ NAME VARCHAR(25),
+ PASSWORD VARCHAR(16),
+ -- 使用表级约束语法
+ CONSTRAINT uk_name_pwd UNIQUE(NAME,PASSWORD)
+);
+</code></pre><blockquote><p>表示用户名和密码组合不能重复</p></blockquote><pre class="language-"><code class="lang-mysql">insert into student values(1,&apos;张三&apos;,&apos;13710011002&apos;,&apos;101223199012015623&apos;);
+insert into student values(2,&apos;李四&apos;,&apos;13710011003&apos;,&apos;101223199012015624&apos;);
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from student;
++-----+-------+-------------+--------------------+
+| sid | sname | tel         | cardid             |
++-----+-------+-------------+--------------------+
+|   1 | 张三  | 13710011002 | 101223199012015623 |
+|   2 | 李四  | 13710011003 | 101223199012015624 |
++-----+-------+-------------+--------------------+
+2 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">insert into student values(3,&apos;王五&apos;,&apos;13710011004&apos;,&apos;101223199012015624&apos;); #身份证号重复
+ERROR 1062 (23000): Duplicate entry &apos;101223199012015624&apos; for key &apos;cardid&apos;
+
+insert into student values(3,&apos;王五&apos;,&apos;13710011003&apos;,&apos;101223199012015625&apos;); 
+ERROR 1062 (23000): Duplicate entry &apos;13710011003&apos; for key &apos;tel&apos;
+</code></pre><p>（2）建表后指定唯一键约束</p><pre class="language-"><code class="lang-mysql">#字段列表中如果是一个字段，表示该列的值唯一。如果是两个或更多个字段，那么复合唯一，即多个字段的组合是唯一的
+#方式1：
+alter table 表名称 add unique key(字段列表);
+</code></pre><pre class="language-"><code class="lang-mysql">#方式2：
+alter table 表名称 modify 字段名 字段类型 unique;
+</code></pre><p>举例：</p><pre class="language-"><code class="lang-mysql">ALTER TABLE USER 
+ADD UNIQUE(NAME,PASSWORD);
+</code></pre><pre class="language-"><code class="lang-mysql">ALTER TABLE USER 
+ADD CONSTRAINT uk_name_pwd UNIQUE(NAME,PASSWORD);
+</code></pre><pre class="language-"><code class="lang-mysql">ALTER TABLE USER 
+MODIFY NAME VARCHAR(20) UNIQUE;
+</code></pre><p>举例：</p><pre class="language-"><code class="lang-mysql">create table student(
+    sid int primary key,
+    sname varchar(20),
+    tel char(11) ,
+    cardid char(18) 
+);
+</code></pre><pre class="language-"><code class="lang-mysql">alter table student add unique key(tel);
+alter table student add unique key(cardid);
+</code></pre><h3 id="35-关于复合唯一约束"><a name="35-关于复合唯一约束" class="anchor-navigation-ex-anchor" href="#35-关于复合唯一约束"><i class="fa fa-link" aria-hidden="true"></i></a>3.5. 3.5 关于复合唯一约束</h3><pre class="language-"><code class="lang-mysql">create table 表名称(
+    字段名  数据类型,
+    字段名  数据类型,  
+    字段名  数据类型,
+    unique key(字段列表) #字段列表中写的是多个字段名，多个字段名用逗号分隔，表示那么是复合唯一，即多个字段的组合是唯一的
+);
+</code></pre><pre class="language-"><code class="lang-mysql">#学生表
+create table student(
+    sid int,    #学号
+    sname varchar(20),            #姓名
+    tel char(11) unique key,  #电话
+    cardid char(18) unique key #身份证号
+);
+
+#课程表
+create table course(
+    cid int,  #课程编号
+    cname varchar(20)     #课程名称
+);
+
+#选课表
+create table student_course(
+    id int,
+    sid int,
+    cid int,
+    score int,
+    unique key(sid,cid)  #复合唯一
+);
+</code></pre><pre class="language-"><code class="lang-mysql">insert into student values(1,&apos;张三&apos;,&apos;13710011002&apos;,&apos;101223199012015623&apos;);#成功
+insert into student values(2,&apos;李四&apos;,&apos;13710011003&apos;,&apos;101223199012015624&apos;);#成功
+insert into course values(1001,&apos;Java&apos;),(1002,&apos;MySQL&apos;);#成功
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from student;
++-----+-------+-------------+--------------------+
+| sid | sname | tel         | cardid             |
++-----+-------+-------------+--------------------+
+|   1 | 张三  | 13710011002 | 101223199012015623 |
+|   2 | 李四  | 13710011003 | 101223199012015624 |
++-----+-------+-------------+--------------------+
+2 rows in set (0.00 sec)
+
+mysql&gt; select * from course;
++------+-------+
+| cid  | cname |
++------+-------+
+| 1001 | Java  |
+| 1002 | MySQL |
++------+-------+
+2 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">insert into student_course values
+(1, 1, 1001, 89),
+(2, 1, 1002, 90),
+(3, 2, 1001, 88),
+(4, 2, 1002, 56);#成功
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from student_course;
++----+------+------+-------+
+| id | sid  | cid  | score |
++----+------+------+-------+
+|  1 |    1 | 1001 |    89 |
+|  2 |    1 | 1002 |    90 |
+|  3 |    2 | 1001 |    88 |
+|  4 |    2 | 1002 |    56 |
++----+------+------+-------+
+4 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">insert into student_course values (5, 1, 1001, 88);#失败
+
+#ERROR 1062 (23000): Duplicate entry &apos;1-1001&apos; for key &apos;sid&apos;   违反sid-cid的复合唯一
+</code></pre><h3 id="35-删除唯一约束"><a name="35-删除唯一约束" class="anchor-navigation-ex-anchor" href="#35-删除唯一约束"><i class="fa fa-link" aria-hidden="true"></i></a>3.6. 3.5 删除唯一约束</h3><ul><li>添加唯一性约束的列上也会自动创建唯一索引。</li><li>删除唯一约束只能通过删除唯一索引的方式删除。</li><li>删除时需要指定唯一索引名，唯一索引名就和唯一约束名一样。</li><li>如果创建唯一约束时未指定名称，如果是单列，就默认和列名相同；如果是组合列，那么默认和()中排在第一个的列名相同。也可以自定义唯一性约束名。</li></ul><pre class="language-"><code class="lang-mysql">SELECT * FROM information_schema.table_constraints WHERE table_name = &apos;表名&apos;; #查看都有哪些约束
+</code></pre><pre class="language-"><code class="lang-mysql">ALTER TABLE USER 
+DROP INDEX uk_name_pwd;
+</code></pre><blockquote><p>注意：可以通过 <code>show index from 表名称;</code>查看表的索引</p></blockquote><h2 id="4-primary-key-约束"><a name="4-primary-key-约束" class="anchor-navigation-ex-anchor" href="#4-primary-key-约束"><i class="fa fa-link" aria-hidden="true"></i></a>4. 4. PRIMARY KEY 约束</h2><h3 id="41-作用"><a name="41-作用" class="anchor-navigation-ex-anchor" href="#41-作用"><i class="fa fa-link" aria-hidden="true"></i></a>4.1. 4.1 作用</h3><p>用来唯一标识表中的一行记录。</p><h3 id="42-关键字"><a name="42-关键字" class="anchor-navigation-ex-anchor" href="#42-关键字"><i class="fa fa-link" aria-hidden="true"></i></a>4.2. 4.2 关键字</h3><p>primary key</p><h3 id="43-特点"><a name="43-特点" class="anchor-navigation-ex-anchor" href="#43-特点"><i class="fa fa-link" aria-hidden="true"></i></a>4.3. 4.3 特点</h3><ul><li>主键约束相当于<strong>唯一约束+非空约束的组合</strong>，主键约束列不允许重复，也不允许出现空值。</li></ul><figure id="fig1.15.2"><a href="images/1555427492244.png" rel="grouped" title="1555427492244" target="_self" class="fancybox"><div class="image-wrapper"><img src="images/1555427492244.png" alt="1555427492244"></div></a><figcaption>图：1555427492244</figcaption></figure><ul><li>一个表最多只能有一个主键约束，建立主键约束可以在列级别创建，也可以在表级别上创建。</li></ul><ul><li>主键约束对应着表中的一列或者多列（复合主键）</li><li>如果是多列组合的复合主键约束，那么这些列都不允许为空值，并且组合的值不允许重复。</li><li><p><strong>MySQL的主键名总是PRIMARY</strong>，就算自己命名了主键约束名也没用。</p></li><li><p>当创建主键约束时，系统默认会在所在的列或列组合上建立对应的<strong>主键索引</strong>（能够根据主键查询的，就根据主键查询，效率更高）。如果删除主键约束了，主键约束对应的索引就自动删除了。</p></li></ul><ul><li>需要注意的一点是，不要修改主键字段的值。因为主键是数据记录的唯一标识，如果修改了主键的值，就有可能会破坏数据的完整性。</li></ul><h3 id="44-添加主键约束"><a name="44-添加主键约束" class="anchor-navigation-ex-anchor" href="#44-添加主键约束"><i class="fa fa-link" aria-hidden="true"></i></a>4.4. 4.4 添加主键约束</h3><p>（1）建表时指定主键约束</p><pre class="language-"><code class="lang-mysql">create table 表名称(
+    字段名  数据类型  primary key, #列级模式
+    字段名  数据类型,  
+    字段名  数据类型  
+);
+create table 表名称(
+    字段名  数据类型,
+    字段名  数据类型,  
+    字段名  数据类型,
+    [constraint 约束名] primary key(字段名) #表级模式
+);
+</code></pre><p>举例：</p><pre class="language-"><code class="lang-mysql">create table temp(
+    id int primary key,
+    name varchar(20)
+);
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; desc temp;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| id    | int(11)     | NO   | PRI | NULL    |       |
+| name  | varchar(20) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">insert into temp values(1,&apos;张三&apos;);#成功
+insert into temp values(2,&apos;李四&apos;);#成功
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from temp;
++----+------+
+| id | name |
++----+------+
+|  1 | 张三 |
+|  2 | 李四 |
++----+------+
+2 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">insert into temp values(1,&apos;张三&apos;);#失败
+ERROR 1062 (23000): Duplicate（重复） entry（键入，输入） &apos;1&apos; for key &apos;PRIMARY&apos;
+
+
+insert into temp values(1,&apos;王五&apos;);#失败
+ERROR 1062 (23000): Duplicate entry &apos;1&apos; for key &apos;PRIMARY&apos;
+
+insert into temp values(3,&apos;张三&apos;);#成功
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from temp;
++----+------+
+| id | name |
++----+------+
+|  1 | 张三 |
+|  2 | 李四 |
+|  3 | 张三 |
++----+------+
+3 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">insert into temp values(4,null);#成功
+
+
+insert into temp values(null,&apos;李琦&apos;);#失败
+ERROR 1048 (23000): Column &apos;id&apos; cannot be null
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from temp;
++----+------+
+| id | name |
++----+------+
+|  1 | 张三 |
+|  2 | 李四 |
+|  3 | 张三 |
+|  4 | NULL |
++----+------+
+4 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">#演示一个表建立两个主键约束
+create table temp(
+    id int primary key,
+    name varchar(20) primary key
+);
+ERROR 1068 (42000): Multiple（多重的） primary key defined（定义）
+</code></pre><p>再举例：</p><ul><li>列级约束</li></ul><pre class="language-"><code class="lang-mysql">CREATE TABLE emp4(
+id INT PRIMARY KEY AUTO_INCREMENT ,
+NAME VARCHAR(20)
+);
+</code></pre><ul><li>表级约束</li></ul><pre class="language-"><code class="lang-mysql">CREATE TABLE emp5(
+id INT NOT NULL AUTO_INCREMENT,
+NAME VARCHAR(20),
+pwd VARCHAR(15),
+CONSTRAINT emp5_id_pk PRIMARY KEY(id)
+);
+</code></pre><p>（2）建表后增加主键约束</p><pre class="language-"><code class="lang-mysql">ALTER TABLE 表名称 ADD PRIMARY KEY(字段列表); #字段列表可以是一个字段，也可以是多个字段，如果是多个字段的话，是复合主键
+</code></pre><pre class="language-"><code class="lang-mysql">ALTER TABLE student ADD PRIMARY KEY (sid);
+</code></pre><pre class="language-"><code class="lang-mysql">ALTER TABLE emp5 ADD PRIMARY KEY(NAME,pwd);
+</code></pre><h3 id="45-关于复合主键"><a name="45-关于复合主键" class="anchor-navigation-ex-anchor" href="#45-关于复合主键"><i class="fa fa-link" aria-hidden="true"></i></a>4.5. 4.5 关于复合主键</h3><pre class="language-"><code class="lang-mysql">create table 表名称(
+    字段名  数据类型,
+    字段名  数据类型,  
+    字段名  数据类型,
+    primary key(字段名1,字段名2)  #表示字段1和字段2的组合是唯一的，也可以有更多个字段
+);
+</code></pre><pre class="language-"><code class="lang-mysql">#学生表
+create table student(
+    sid int primary key,  #学号
+    sname varchar(20)     #学生姓名
+);
+
+#课程表
+create table course(
+    cid int primary key,  #课程编号
+    cname varchar(20)     #课程名称
+);
+
+#选课表
+create table student_course(
+    sid int,
+    cid int,
+    score int,
+    primary key(sid,cid)  #复合主键
+);
+</code></pre><pre class="language-"><code class="lang-mysql">insert into student values(1,&apos;张三&apos;),(2,&apos;李四&apos;);
+insert into course values(1001,&apos;Java&apos;),(1002,&apos;MySQL&apos;);
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from student;
++-----+-------+
+| sid | sname |
++-----+-------+
+|   1 | 张三  |
+|   2 | 李四  |
++-----+-------+
+2 rows in set (0.00 sec)
+
+mysql&gt; select * from course;
++------+-------+
+| cid  | cname |
++------+-------+
+| 1001 | Java  |
+| 1002 | MySQL |
++------+-------+
+2 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">insert into student_course values(1, 1001, 89),(1,1002,90),(2,1001,88),(2,1002,56);
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from student_course;
++-----+------+-------+
+| sid | cid  | score |
++-----+------+-------+
+|   1 | 1001 |    89 |
+|   1 | 1002 |    90 |
+|   2 | 1001 |    88 |
+|   2 | 1002 |    56 |
++-----+------+-------+
+4 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">insert into student_course values(1, 1001, 100);
+ERROR 1062 (23000): Duplicate entry &apos;1-1001&apos; for key &apos;PRIMARY&apos;
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; desc student_course;
++-------+---------+------+-----+---------+-------+
+| Field | Type    | Null | Key | Default | Extra |
++-------+---------+------+-----+---------+-------+
+| sid   | int(11) | NO   | PRI | NULL    |       |
+| cid   | int(11) | NO   | PRI | NULL    |       |
+| score | int(11) | YES  |     | NULL    |       |
++-------+---------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+</code></pre><ul><li>再举例</li></ul><pre class="language-"><code class="lang-mysql">CREATE TABLE emp6(
+id INT NOT NULL,
+NAME VARCHAR(20),
+pwd VARCHAR(15),
+CONSTRAINT emp7_pk PRIMARY KEY(NAME,pwd)
+);
+</code></pre><h3 id="46-删除主键约束"><a name="46-删除主键约束" class="anchor-navigation-ex-anchor" href="#46-删除主键约束"><i class="fa fa-link" aria-hidden="true"></i></a>4.6. 4.6 删除主键约束</h3><pre class="language-"><code class="lang-mysql">alter table 表名称 drop primary key;
+</code></pre><p>举例：</p><pre class="language-"><code class="lang-mysql">ALTER TABLE student DROP PRIMARY KEY;
+</code></pre><pre class="language-"><code class="lang-mysql">ALTER TABLE emp5 DROP PRIMARY KEY;
+</code></pre><blockquote><p>说明：删除主键约束，不需要指定主键名，因为一个表只有一个主键，删除主键约束后，非空还存在。</p></blockquote><h2 id="5-自增列：autoincrement"><a name="5-自增列：autoincrement" class="anchor-navigation-ex-anchor" href="#5-自增列：autoincrement"><i class="fa fa-link" aria-hidden="true"></i></a>5. 5. 自增列：AUTO_INCREMENT</h2><h3 id="51-作用"><a name="51-作用" class="anchor-navigation-ex-anchor" href="#51-作用"><i class="fa fa-link" aria-hidden="true"></i></a>5.1. 5.1 作用</h3><p>某个字段的值自增</p><h3 id="52-关键字"><a name="52-关键字" class="anchor-navigation-ex-anchor" href="#52-关键字"><i class="fa fa-link" aria-hidden="true"></i></a>5.2. 5.2 关键字</h3><p>auto_increment</p><h3 id="53-特点和要求"><a name="53-特点和要求" class="anchor-navigation-ex-anchor" href="#53-特点和要求"><i class="fa fa-link" aria-hidden="true"></i></a>5.3. 5.3 特点和要求</h3><p>（1）一个表最多只能有一个自增长列</p><p>（2）当需要产生唯一标识符或顺序值时，可设置自增长</p><p>（3）自增长列约束的列必须是键列（主键列，唯一键列）</p><p>（4）自增约束的列的数据类型必须是整数类型</p><p>（5）如果自增列指定了 0 和 null，会在当前最大值的基础上自增；如果自增列手动指定了具体值，直接赋值为具体值。</p><p>错误演示：</p><pre class="language-"><code class="lang-mysql">create table employee(
+    eid int auto_increment,
+    ename varchar(20)
+);
+# ERROR 1075 (42000): Incorrect table definition; there can be only one auto column and it must be defined as a key
+</code></pre><pre class="language-"><code class="lang-mysql">create table employee(
+    eid int primary key,
+    ename varchar(20) unique key auto_increment
+);
+# ERROR 1063 (42000): Incorrect column specifier for column &apos;ename&apos;  因为ename不是整数类型
+</code></pre><h3 id="54-如何指定自增约束"><a name="54-如何指定自增约束" class="anchor-navigation-ex-anchor" href="#54-如何指定自增约束"><i class="fa fa-link" aria-hidden="true"></i></a>5.4. 5.4 如何指定自增约束</h3><p><strong>（1）建表时</strong></p><pre class="language-"><code class="lang-mysql">create table 表名称(
+    字段名  数据类型  primary key auto_increment,
+    字段名  数据类型  unique key not null,  
+    字段名  数据类型  unique key,
+    字段名  数据类型  not null default 默认值, 
+);
+create table 表名称(
+    字段名  数据类型 default 默认值 ,
+    字段名  数据类型 unique key auto_increment,  
+    字段名  数据类型 not null default 默认值,,
+    primary key(字段名)
+);
+</code></pre><pre class="language-"><code class="lang-mysql">create table employee(
+    eid int primary key auto_increment,
+    ename varchar(20)
+);
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; desc employee;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| eid   | int(11)     | NO   | PRI | NULL    | auto_increment |
+| ename | varchar(20) | YES  |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+</code></pre><p><strong>（2）建表后</strong></p><pre class="language-"><code class="lang-mysql">alter table 表名称 modify 字段名 数据类型 auto_increment;
+</code></pre><p>例如：</p><pre class="language-"><code class="lang-mysql">create table employee(
+    eid int primary key ,
+    ename varchar(20)
+);
+</code></pre><pre class="language-"><code class="lang-mysql">alter table employee modify eid int auto_increment;
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; desc employee;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| eid   | int(11)     | NO   | PRI | NULL    | auto_increment |
+| ename | varchar(20) | YES  |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+</code></pre><h3 id="55-如何删除自增约束"><a name="55-如何删除自增约束" class="anchor-navigation-ex-anchor" href="#55-如何删除自增约束"><i class="fa fa-link" aria-hidden="true"></i></a>5.5. 5.5 如何删除自增约束</h3><pre class="language-"><code class="lang-mysql">#alter table 表名称 modify 字段名 数据类型 auto_increment;#给这个字段增加自增约束
+
+alter table 表名称 modify 字段名 数据类型; #去掉auto_increment相当于删除
+</code></pre><pre class="language-"><code class="lang-mysql">alter table employee modify eid int;
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; desc employee;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| eid   | int(11)     | NO   | PRI | NULL    |       |
+| ename | varchar(20) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+</code></pre><h3 id="56-mysql-80新特性—自增变量的持久化"><a name="56-mysql-80新特性—自增变量的持久化" class="anchor-navigation-ex-anchor" href="#56-mysql-80新特性—自增变量的持久化"><i class="fa fa-link" aria-hidden="true"></i></a>5.6. 5.6 MySQL 8.0新特性—自增变量的持久化</h3><p>在MySQL 8.0之前，自增主键AUTO_INCREMENT的值如果大于max(primary key)+1，在MySQL重启后，会重置AUTO_INCREMENT=max(primary key)+1，这种现象在某些情况下会导致业务主键冲突或者其他难以发现的问题。 下面通过案例来对比不同的版本中自增变量是否持久化。 在MySQL 5.7版本中，测试步骤如下： 创建的数据表中包含自增主键的id字段，语句如下：</p><pre class="language-"><code class="lang-mysql">CREATE TABLE test1(
+id INT PRIMARY KEY AUTO_INCREMENT
+);
+</code></pre><p>插入4个空值，执行如下：</p><pre class="language-"><code class="lang-mysql">INSERT INTO test1
+VALUES(0),(0),(0),(0);
+</code></pre><p>查询数据表test1中的数据，结果如下：</p><pre class="language-"><code class="lang-mysql">mysql&gt; SELECT * FROM test1;
++----+
+| id |
++----+
+|  1 |
+|  2 |
+|  3 |
+|  4 |
++----+
+4 rows in set (0.00 sec)
+</code></pre><p>删除id为4的记录，语句如下：</p><pre class="language-"><code class="lang-mysql">DELETE FROM test1 WHERE id = 4;
+</code></pre><p>再次插入一个空值，语句如下：</p><pre class="language-"><code class="lang-mysql">INSERT INTO test1 VALUES(0);
+</code></pre><p>查询此时数据表test1中的数据，结果如下：</p><pre class="language-"><code class="lang-mysql">mysql&gt; SELECT * FROM test1;
++----+
+| id |
++----+
+|  1 |
+|  2 |
+|  3 |
+|  5 |
++----+
+4 rows in set (0.00 sec)
+</code></pre><p>从结果可以看出，虽然删除了id为4的记录，但是再次插入空值时，并没有重用被删除的4，而是分配了5。 删除id为5的记录，结果如下：</p><pre class="language-"><code class="lang-mysql">DELETE FROM test1 where id=5;
+</code></pre><p><strong>重启数据库</strong>，重新插入一个空值。</p><pre class="language-"><code class="lang-mysql">INSERT INTO test1 values(0);
+</code></pre><p>再次查询数据表test1中的数据，结果如下：</p><pre class="language-"><code class="lang-mysql">mysql&gt; SELECT * FROM test1;
++----+
+| id |
++----+
+|  1 |
+|  2 |
+|  3 |
+|  4 |
++----+
+4 rows in set (0.00 sec)
+</code></pre><p>从结果可以看出，新插入的0值分配的是4，按照重启前的操作逻辑，此处应该分配6。出现上述结果的主要原因是自增主键没有持久化。 在MySQL 5.7系统中，对于自增主键的分配规则，是由InnoDB数据字典内部一个<code>计数器</code>来决定的，而该计数器只在<code>内存中维护</code>，并不会持久化到磁盘中。当数据库重启时，该计数器会被初始化。</p><p>在MySQL 8.0版本中，上述测试步骤最后一步的结果如下：</p><pre class="language-"><code class="lang-mysql">mysql&gt; SELECT * FROM test1;
++----+
+| id |
++----+
+|  1 |
+|  2 |
+|  3 |
+|  6 |
++----+
+4 rows in set (0.00 sec)
+</code></pre><p>从结果可以看出，自增变量已经持久化了。</p><p>MySQL 8.0将自增主键的计数器持久化到<code>重做日志</code>中。每次计数器发生改变，都会将其写入重做日志中。如果数据库重启，InnoDB会根据重做日志中的信息来初始化计数器的内存值。</p><h2 id="6-foreign-key-约束"><a name="6-foreign-key-约束" class="anchor-navigation-ex-anchor" href="#6-foreign-key-约束"><i class="fa fa-link" aria-hidden="true"></i></a>6. 6. FOREIGN KEY 约束</h2><h3 id="61-作用"><a name="61-作用" class="anchor-navigation-ex-anchor" href="#61-作用"><i class="fa fa-link" aria-hidden="true"></i></a>6.1. 6.1 作用</h3><p>限定某个表的某个字段的引用完整性。</p><p>比如：员工表的员工所在部门的选择，必须在部门表能找到对应的部分。</p><figure id="fig1.15.3"><a href="images/1555428214706.png" rel="grouped" title="1555428214706" target="_self" class="fancybox"><div class="image-wrapper"><img src="images/1555428214706.png" alt="1555428214706"></div></a><figcaption>图：1555428214706</figcaption></figure><h3 id="62-关键字"><a name="62-关键字" class="anchor-navigation-ex-anchor" href="#62-关键字"><i class="fa fa-link" aria-hidden="true"></i></a>6.2. 6.2 关键字</h3><p>FOREIGN KEY</p><h3 id="63-主表和从表父表和子表"><a name="63-主表和从表父表和子表" class="anchor-navigation-ex-anchor" href="#63-主表和从表父表和子表"><i class="fa fa-link" aria-hidden="true"></i></a>6.3. 6.3 主表和从表/父表和子表</h3><p>主表（父表）：被引用的表，被参考的表</p><p>从表（子表）：引用别人的表，参考别人的表</p><p>例如：员工表的员工所在部门这个字段的值要参考部门表：部门表是主表，员工表是从表。</p><p>例如：学生表、课程表、选课表：选课表的学生和课程要分别参考学生表和课程表，学生表和课程表是主表，选课表是从表。</p><h3 id="64-特点"><a name="64-特点" class="anchor-navigation-ex-anchor" href="#64-特点"><i class="fa fa-link" aria-hidden="true"></i></a>6.4. 6.4 特点</h3><p>（1）从表的外键列，必须引用/参考主表的主键或唯一约束的列</p><p>​ 为什么？因为被依赖/被参考的值必须是唯一的</p><p>（2）在创建外键约束时，如果不给外键约束命名，<strong>默认名不是列名，而是自动产生一个外键名</strong>（例如 student_ibfk_1;），也可以指定外键约束名。</p><p>（3）创建(CREATE)表时就指定外键约束的话，先创建主表，再创建从表</p><p>（4）删表时，先删从表（或先删除外键约束），再删除主表</p><p>（5）当主表的记录被从表参照时，主表的记录将不允许删除，如果要删除数据，需要先删除从表中依赖该记录的数据，然后才可以删除主表的数据</p><p>（6）在“从表”中指定外键约束，并且一个表可以建立多个外键约束</p><p>（7）从表的外键列与主表被参照的列名字可以不相同，但是数据类型必须一样，逻辑意义一致。如果类型不一样，创建子表时，就会出现错误“ERROR 1005 (HY000): Can&apos;t create table&apos;database.tablename&apos;(errno: 150)”。</p><p>​ 例如：都是表示部门编号，都是int类型。</p><p>（8）<strong>当创建外键约束时，系统默认会在所在的列上建立对应的普通索引</strong>。但是索引名是外键的约束名。（根据外键查询效率很高）</p><p>（9）删除外键约束后，必须<code>手动</code>删除对应的索引</p><h3 id="65-添加外键约束"><a name="65-添加外键约束" class="anchor-navigation-ex-anchor" href="#65-添加外键约束"><i class="fa fa-link" aria-hidden="true"></i></a>6.5. 6.5 添加外键约束</h3><p>（1）建表时</p><pre class="language-"><code class="lang-mysql">create table 主表名称(
+    字段1  数据类型  primary key,
+    字段2  数据类型
+);
+
+create table 从表名称(
+    字段1  数据类型  primary key,
+    字段2  数据类型,
+    [CONSTRAINT <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>外键约束名称</span><span class="token punctuation">&gt;</span></span>] FOREIGN KEY（从表的某个字段) references 主表名(被参考字段)
+);
+#(从表的某个字段)的数据类型必须与主表名(被参考字段)的数据类型一致，逻辑意义也一样
+#(从表的某个字段)的字段名可以与主表名(被参考字段)的字段名一样，也可以不一样
+
+-- FOREIGN KEY: 在表级指定子表中的列
+-- REFERENCES: 标示在父表中的列
+</code></pre><pre class="language-"><code class="lang-mysql">create table dept( #主表
+    did int primary key,        #部门编号
+    dname varchar(50)            #部门名称
+);
+
+create table emp(#从表
+    eid int primary key,  #员工编号
+    ename varchar(5),     #员工姓名
+    deptid int,                #员工所在的部门
+    foreign key (deptid) references dept(did)   #在从表中指定外键约束
+    #emp表的deptid和和dept表的did的数据类型一致，意义都是表示部门的编号
+);
+
+说明：
+（1）主表dept必须先创建成功，然后才能创建emp表，指定外键成功。
+（2）删除表时，先删除从表emp，再删除主表dept
+</code></pre><p>（2）建表后</p><p>一般情况下，表与表的关联都是提前设计好了的，因此，会在创建表的时候就把外键约束定义好。不过，如果需要修改表的设计（比如添加新的字段，增加新的关联关系），但没有预先定义外键约束，那么，就要用修改表的方式来补充定义。</p><p>格式：</p><pre class="language-"><code class="lang-mysql">ALTER TABLE 从表名 ADD [CONSTRAINT 约束名] FOREIGN KEY (从表的字段) REFERENCES 主表名(被引用字段) [on update xx][on delete xx];
+</code></pre><p>举例：</p><pre class="language-"><code class="lang-mysql">ALTER TABLE emp1
+ADD [CONSTRAINT emp_dept_id_fk] FOREIGN KEY(dept_id) REFERENCES dept(dept_id);
+</code></pre><p>举例：</p><pre class="language-"><code class="lang-mysql">create table dept(
+    did int primary key,        #部门编号
+    dname varchar(50)            #部门名称
+);
+
+create table emp(
+    eid int primary key,  #员工编号
+    ename varchar(5),     #员工姓名
+    deptid int                #员工所在的部门
+);
+#这两个表创建时，没有指定外键的话，那么创建顺序是随意
+</code></pre><pre class="language-"><code class="lang-mysql">alter table emp add foreign key (deptid) references dept(did);
+</code></pre><h3 id="66-演示问题"><a name="66-演示问题" class="anchor-navigation-ex-anchor" href="#66-演示问题"><i class="fa fa-link" aria-hidden="true"></i></a>6.6. 6.6 演示问题</h3><p>（1）失败：不是键列</p><pre class="language-"><code class="lang-mysql">create table dept(
+    did int ,        #部门编号
+    dname varchar(50)            #部门名称
+);
+
+create table emp(
+    eid int primary key,  #员工编号
+    ename varchar(5),     #员工姓名
+    deptid int,                #员工所在的部门
+    foreign key (deptid) references dept(did)
+);
+#ERROR 1215 (HY000): Cannot add foreign key constraint  原因是dept的did不是键列
+</code></pre><p>（2）失败：数据类型不一致</p><pre class="language-"><code class="lang-mysql">create table dept(
+    did int primary key,        #部门编号
+    dname varchar(50)            #部门名称
+);
+
+create table emp(
+    eid int primary key,  #员工编号
+    ename varchar(5),     #员工姓名
+    deptid char,                #员工所在的部门
+    foreign key (deptid) references dept(did)
+);
+#ERROR 1215 (HY000): Cannot add foreign key constraint  原因是从表的deptid字段和主表的did字段的数据类型不一致，并且要它俩的逻辑意义一致
+</code></pre><p>（3）成功，两个表字段名一样</p><pre class="language-"><code class="lang-mysql">create table dept(
+    did int primary key,        #部门编号
+    dname varchar(50)            #部门名称
+);
+
+create table emp(
+    eid int primary key,  #员工编号
+    ename varchar(5),     #员工姓名
+    did int,                #员工所在的部门
+    foreign key (did) references dept(did)  
+    #emp表的deptid和和dept表的did的数据类型一致，意义都是表示部门的编号
+    #是否重名没问题，因为两个did在不同的表中
+);
+</code></pre><p>（4）添加、删除、修改问题</p><pre class="language-"><code class="lang-mysql">create table dept(
+    did int primary key,        #部门编号
+    dname varchar(50)            #部门名称
+);
+
+create table emp(
+    eid int primary key,  #员工编号
+    ename varchar(5),     #员工姓名
+    deptid int,                #员工所在的部门
+    foreign key (deptid) references dept(did)  
+    #emp表的deptid和和dept表的did的数据类型一致，意义都是表示部门的编号
+);
+</code></pre><pre class="language-"><code class="lang-mysql">insert into dept values(1001,&apos;教学部&apos;);
+insert into dept values(1003, &apos;财务部&apos;);
+
+insert into emp values(1,&apos;张三&apos;,1001); #添加从表记录成功，在添加这条记录时，要求部门表有1001部门
+
+insert into emp values(2,&apos;李四&apos;,1005);#添加从表记录失败
+ERROR 1452 (23000): Cannot add（添加） or update（修改） a child row: a foreign key constraint fails (`atguigudb`.`emp`, CONSTRAINT `emp_ibfk_1` FOREIGN KEY (`deptid`) REFERENCES `dept` (`did`)) 从表emp添加记录失败，因为主表dept没有1005部门
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from dept;
++------+--------+
+| did  | dname  |
++------+--------+
+| 1001 | 教学部  |
+| 1003 | 财务部  |
++------+--------+
+2 rows in set (0.00 sec)
+
+mysql&gt; select * from emp;
++-----+-------+--------+
+| eid | ename | deptid |
++-----+-------+--------+
+|   1 | 张三   |   1001 |
++-----+-------+--------+
+1 row in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">update emp set deptid = 1002 where eid = 1;#修改从表失败 
+ERROR 1452 (23000): Cannot add（添加） or update（修改） a child row（子表的记录）: a foreign key constraint fails（外键约束失败） (`atguigudb`.`emp`, CONSTRAINT `emp_ibfk_1` FOREIGN KEY (`deptid`) REFERENCES `dept` (`did`))  #部门表did字段现在没有1002的值，所以员工表中不能修改员工所在部门deptid为1002
+
+update dept set did = 1002 where did = 1001;#修改主表失败
+ERROR 1451 (23000): Cannot delete（删除） or update（修改） a parent row（父表的记录）: a foreign key constraint fails (`atguigudb`.`emp`, CONSTRAINT `emp_ibfk_1` FOREIGN KEY (`deptid`) REFERENCES `dept` (`did`)) #部门表did的1001字段已经被emp引用了，所以部门表的1001字段就不能修改了。
+
+update dept set did = 1002 where did = 1003;#修改主表成功  因为部门表的1003部门没有被emp表引用，所以可以修改
+</code></pre><pre class="language-"><code class="lang-mysql">delete from dept where did=1001; #删除主表失败
+ERROR 1451 (23000): Cannot delete（删除） or update（修改） a parent row（父表记录）: a foreign key constraint fails (`atguigudb`.`emp`, CONSTRAINT `emp_ibfk_1` FOREIGN KEY (`deptid`) REFERENCES `dept` (`did`))  #因为部门表did的1001字段已经被emp引用了，所以部门表的1001字段对应的记录就不能被删除
+</code></pre><p>总结：约束关系是针对双方的</p><ul><li><p>添加了外键约束后，主表的修改和删除数据受约束</p></li><li><p>添加了外键约束后，从表的添加和修改数据受约束</p></li><li>在从表上建立外键，要求主表必须存在</li><li>删除主表时，要求从表从表先删除，或将从表中外键引用该主表的关系先删除</li></ul><h3 id="67-约束等级"><a name="67-约束等级" class="anchor-navigation-ex-anchor" href="#67-约束等级"><i class="fa fa-link" aria-hidden="true"></i></a>6.7. 6.7 约束等级</h3><ul><li><p><code>Cascade方式</code>：在父表上update/delete记录时，同步update/delete掉子表的匹配记录</p></li><li><p><code>Set null方式</code>：在父表上update/delete记录时，将子表上匹配记录的列设为null，但是要注意子表的外键列不能为not null</p></li><li><p><code>No action方式</code>：如果子表中有匹配的记录，则不允许对父表对应候选键进行update/delete操作</p></li><li><p><code>Restrict方式</code>：同no action， 都是立即检查外键约束</p></li><li><p><code>Set default方式</code>（在可视化工具SQLyog中可能显示空白）：父表有变更时，子表将外键列设置成一个默认的值，但Innodb不能识别</p></li></ul><p>如果没有指定等级，就相当于Restrict方式。</p><p>对于外键约束，最好是采用: <code>ON UPDATE CASCADE ON DELETE RESTRICT</code> 的方式。</p><p>（1）演示1：on update cascade on delete set null</p><pre class="language-"><code class="lang-mysql">create table dept(
+    did int primary key,        #部门编号
+    dname varchar(50)            #部门名称
+);
+
+create table emp(
+    eid int primary key,  #员工编号
+    ename varchar(5),     #员工姓名
+    deptid int,                #员工所在的部门
+    foreign key (deptid) references dept(did)  on update cascade on delete set null
+    #把修改操作设置为级联修改等级，把删除操作设置为set null等级
+);
+</code></pre><pre class="language-"><code class="lang-mysql">insert into dept values(1001,&apos;教学部&apos;);
+insert into dept values(1002, &apos;财务部&apos;);
+insert into dept values(1003, &apos;咨询部&apos;);
+
+
+insert into emp values(1,&apos;张三&apos;,1001); #在添加这条记录时，要求部门表有1001部门
+insert into emp values(2,&apos;李四&apos;,1001);
+insert into emp values(3,&apos;王五&apos;,1002);
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from dept;
+
+mysql&gt; select * from emp;
+</code></pre><pre class="language-"><code class="lang-mysql">#修改主表成功，从表也跟着修改，修改了主表被引用的字段1002为1004，从表的引用字段就跟着修改为1004了
+mysql&gt; update dept set did = 1004 where did = 1002;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql&gt; select * from dept;
++------+--------+
+| did  | dname  |
++------+--------+
+| 1001 | 教学部 |
+| 1003 | 咨询部 |
+| 1004 | 财务部 | #原来是1002，修改为1004
++------+--------+
+3 rows in set (0.00 sec)
+
+mysql&gt; select * from emp;
++-----+-------+--------+
+| eid | ename | deptid |
++-----+-------+--------+
+|   1 | 张三  |   1001 |
+|   2 | 李四  |   1001 |
+|   3 | 王五  |   1004 | #原来是1002，跟着修改为1004
++-----+-------+--------+
+3 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">#删除主表的记录成功，从表对应的字段的值被修改为null
+mysql&gt; delete from dept where did = 1001;
+Query OK, 1 row affected (0.01 sec)
+
+mysql&gt; select * from dept;
++------+--------+
+| did  | dname  | #记录1001部门被删除了
++------+--------+
+| 1003 | 咨询部  |
+| 1004 | 财务部  |
++------+--------+
+2 rows in set (0.00 sec)
+
+mysql&gt; select * from emp;
++-----+-------+--------+
+| eid | ename | deptid |
++-----+-------+--------+
+|   1 | 张三  |   NULL | #原来引用1001部门的员工，deptid字段变为null
+|   2 | 李四  |   NULL |
+|   3 | 王五  |   1004 |
++-----+-------+--------+
+3 rows in set (0.00 sec)
+</code></pre><p>（2）演示2：on update set null on delete cascade</p><pre class="language-"><code class="lang-mysql">create table dept(
+    did int primary key,        #部门编号
+    dname varchar(50)            #部门名称
+);
+
+create table emp(
+    eid int primary key,  #员工编号
+    ename varchar(5),     #员工姓名
+    deptid int,                #员工所在的部门
+    foreign key (deptid) references dept(did)  on update set null on delete cascade
+    #把修改操作设置为set null等级，把删除操作设置为级联删除等级
+);
+</code></pre><pre class="language-"><code class="lang-mysql">insert into dept values(1001,&apos;教学部&apos;);
+insert into dept values(1002, &apos;财务部&apos;);
+insert into dept values(1003, &apos;咨询部&apos;);
+
+insert into emp values(1,&apos;张三&apos;,1001); #在添加这条记录时，要求部门表有1001部门
+insert into emp values(2,&apos;李四&apos;,1001);
+insert into emp values(3,&apos;王五&apos;,1002);
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from dept;
++------+--------+
+| did  | dname  |
++------+--------+
+| 1001 | 教学部 |
+| 1002 | 财务部 |
+| 1003 | 咨询部 |
++------+--------+
+3 rows in set (0.00 sec)
+
+mysql&gt; select * from emp;
++-----+-------+--------+
+| eid | ename | deptid |
++-----+-------+--------+
+|   1 | 张三  |   1001 |
+|   2 | 李四  |   1001 |
+|   3 | 王五  |   1002 |
++-----+-------+--------+
+3 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">#修改主表，从表对应的字段设置为null
+mysql&gt; update dept set did = 1004 where did = 1002;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql&gt; select * from dept;
++------+--------+
+| did  | dname  |
++------+--------+
+| 1001 | 教学部 |
+| 1003 | 咨询部 |
+| 1004 | 财务部 | #原来did是1002
++------+--------+
+3 rows in set (0.00 sec)
+
+mysql&gt; select * from emp;
++-----+-------+--------+
+| eid | ename | deptid |
++-----+-------+--------+
+|   1 | 张三  |   1001 |
+|   2 | 李四  |   1001 |
+|   3 | 王五  |   NULL | #原来deptid是1002，因为部门表1002被修改了，1002没有对应的了，就设置为null
++-----+-------+--------+
+3 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">#删除主表的记录成功，主表的1001行被删除了，从表相应的记录也被删除了
+mysql&gt; delete from dept where did=1001;
+Query OK, 1 row affected (0.00 sec)
+
+mysql&gt; select * from dept;
++------+--------+
+| did  | dname  | #部门表中1001部门被删除
++------+--------+
+| 1003 | 咨询部 |
+| 1004 | 财务部 |
++------+--------+
+2 rows in set (0.00 sec)
+
+mysql&gt; select * from emp;
++-----+-------+--------+
+| eid | ename | deptid |#原来1001部门的员工也被删除了
++-----+-------+--------+
+|   3 | 王五  |   NULL |
++-----+-------+--------+
+1 row in set (0.00 sec)
+</code></pre><p>（3）演示：on update cascade on delete cascade</p><pre class="language-"><code class="lang-mysql">create table dept(
+    did int primary key,        #部门编号
+    dname varchar(50)            #部门名称
+);
+
+create table emp(
+    eid int primary key,  #员工编号
+    ename varchar(5),     #员工姓名
+    deptid int,                #员工所在的部门
+    foreign key (deptid) references dept(did)  on update cascade on delete cascade
+    #把修改操作设置为级联修改等级，把删除操作也设置为级联删除等级
+);
+</code></pre><pre class="language-"><code class="lang-mysql">insert into dept values(1001,&apos;教学部&apos;);
+insert into dept values(1002, &apos;财务部&apos;);
+insert into dept values(1003, &apos;咨询部&apos;);
+
+insert into emp values(1,&apos;张三&apos;,1001); #在添加这条记录时，要求部门表有1001部门
+insert into emp values(2,&apos;李四&apos;,1001);
+insert into emp values(3,&apos;王五&apos;,1002);
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from dept;
++------+--------+
+| did  | dname  |
++------+--------+
+| 1001 | 教学部 |
+| 1002 | 财务部 |
+| 1003 | 咨询部 |
++------+--------+
+3 rows in set (0.00 sec)
+
+mysql&gt; select * from emp;
++-----+-------+--------+
+| eid | ename | deptid |
++-----+-------+--------+
+|   1 | 张三  |   1001 |
+|   2 | 李四  |   1001 |
+|   3 | 王五  |   1002 |
++-----+-------+--------+
+3 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">#修改主表，从表对应的字段自动修改
+mysql&gt; update dept set did = 1004 where did = 1002;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql&gt; select * from dept;
++------+--------+
+| did  | dname  |
++------+--------+
+| 1001 | 教学部 |
+| 1003 | 咨询部 |
+| 1004 | 财务部 | #部门1002修改为1004
++------+--------+
+3 rows in set (0.00 sec)
+
+mysql&gt; select * from emp;
++-----+-------+--------+
+| eid | ename | deptid |
++-----+-------+--------+
+|   1 | 张三  |   1001 |
+|   2 | 李四  |   1001 |
+|   3 | 王五  |   1004 | #级联修改
++-----+-------+--------+
+3 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">#删除主表的记录成功，主表的1001行被删除了，从表相应的记录也被删除了
+mysql&gt; delete from dept where did=1001;
+Query OK, 1 row affected (0.00 sec)
+
+mysql&gt; select * from dept;
++------+--------+
+| did  | dname  | #1001部门被删除了
++------+--------+
+| 1003 | 咨询部 |
+| 1004 | 财务部 | 
++------+--------+
+2 rows in set (0.00 sec)
+
+mysql&gt; select * from emp;
++-----+-------+--------+
+| eid | ename | deptid |  #1001部门的员工也被删除了
++-----+-------+--------+
+|   3 | 王五  |   1004 |
++-----+-------+--------+
+1 row in set (0.00 sec)
+</code></pre><h3 id="68-删除外键约束"><a name="68-删除外键约束" class="anchor-navigation-ex-anchor" href="#68-删除外键约束"><i class="fa fa-link" aria-hidden="true"></i></a>6.8. 6.8 删除外键约束</h3><p>流程如下：</p><pre class="language-"><code class="lang-mysql">(1)第一步先查看约束名和删除外键约束
+SELECT * FROM information_schema.table_constraints WHERE table_name = &apos;表名称&apos;;#查看某个表的约束名
+
+ALTER TABLE 从表名 DROP FOREIGN KEY 外键约束名;
+
+（2）第二步查看索引名和删除索引。（注意，只能手动删除）
+SHOW INDEX FROM 表名称; #查看某个表的索引名
+
+ALTER TABLE 从表名 DROP INDEX 索引名;
+</code></pre><p>举例：</p><pre class="language-"><code class="lang-mysql">mysql&gt; SELECT * FROM information_schema.table_constraints WHERE table_name = &apos;emp&apos;;
+
+mysql&gt; alter table emp drop foreign key emp_ibfk_1;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; show index from emp;
+
+mysql&gt; alter table emp drop index deptid;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql&gt;  show index from emp;
+</code></pre><h3 id="69-开发场景"><a name="69-开发场景" class="anchor-navigation-ex-anchor" href="#69-开发场景"><i class="fa fa-link" aria-hidden="true"></i></a>6.9. 6.9 开发场景</h3><p><strong>问题1：如果两个表之间有关系（一对一、一对多），比如：员工表和部门表（一对多），它们之间是否一定要建外键约束？</strong></p><p>答：不是的</p><p><strong>问题2：建和不建外键约束有什么区别？</strong></p><p>答：建外键约束，你的操作（创建表、删除表、添加、修改、删除）会受到限制，从语法层面受到限制。例如：在员工表中不可能添加一个员工信息，它的部门的值在部门表中找不到。</p><p>不建外键约束，你的操作（创建表、删除表、添加、修改、删除）不受限制，要保证数据的<code>引用完整性</code>，只能依<code>靠程序员的自觉</code>，或者是<code>在Java程序中进行限定</code>。例如：在员工表中，可以添加一个员工的信息，它的部门指定为一个完全不存在的部门。</p><p><strong>问题3：那么建和不建外键约束和查询有没有关系？</strong></p><p>答：没有</p><blockquote><p>在 MySQL 里，外键约束是有成本的，需要消耗系统资源。对于大并发的 SQL 操作，有可能会不适合。比如大型网站的中央数据库，可能会<code>因为外键约束的系统开销而变得非常慢</code>。所以， MySQL 允许你不使用系统自带的外键约束，在<code>应用层面</code>完成检查数据一致性的逻辑。也就是说，即使你不用外键约束，也要想办法通过应用层面的附加逻辑，来实现外键约束的功能，确保数据的一致性。</p></blockquote><h3 id="610-阿里开发规范"><a name="610-阿里开发规范" class="anchor-navigation-ex-anchor" href="#610-阿里开发规范"><i class="fa fa-link" aria-hidden="true"></i></a>6.10. 6.10 阿里开发规范</h3><p>【<code>强制</code>】不得使用外键与级联，一切外键概念必须在应用层解决。</p><p>说明：（概念解释）学生表中的 student_id 是主键，那么成绩表中的 student_id 则为外键。如果更新学生表中的 student_id，同时触发成绩表中的 student_id 更新，即为级联更新。外键与级联更新适用于<code>单机低并发</code>，不适合<code>分布式</code>、<code>高并发集群</code>；级联更新是强阻塞，存在数据库<code>更新风暴</code>的风险；外键影响数据库的<code>插入速度</code>。</p><h2 id="7-check-约束"><a name="7-check-约束" class="anchor-navigation-ex-anchor" href="#7-check-约束"><i class="fa fa-link" aria-hidden="true"></i></a>7. 7. CHECK 约束</h2><h3 id="71-作用"><a name="71-作用" class="anchor-navigation-ex-anchor" href="#71-作用"><i class="fa fa-link" aria-hidden="true"></i></a>7.1. 7.1 作用</h3><p>检查某个字段的值是否符号xx要求，一般指的是值的范围</p><h3 id="2、关键字"><a name="2、关键字" class="anchor-navigation-ex-anchor" href="#2、关键字"><i class="fa fa-link" aria-hidden="true"></i></a>7.2. 2、关键字</h3><p>CHECK</p><h3 id="3、说明：mysql-57-不支持"><a name="3、说明：mysql-57-不支持" class="anchor-navigation-ex-anchor" href="#3、说明：mysql-57-不支持"><i class="fa fa-link" aria-hidden="true"></i></a>7.3. 3、说明：MySQL 5.7 不支持</h3><p>MySQL5.7 可以使用check约束，但check约束对数据验证没有任何作用。添加数据时，没有任何错误或警告</p><p>但是<strong>MySQL 8.0中可以使用check约束了</strong>。</p><pre class="language-"><code class="lang-mysql">create table employee(
+    eid int primary key,
+    ename varchar(5),
+    gender char check (&apos;男&apos; or &apos;女&apos;)
+);
+</code></pre><pre class="language-"><code class="lang-mysql">insert into employee values(1,&apos;张三&apos;,&apos;妖&apos;);
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from employee;
++-----+-------+--------+
+| eid | ename | gender |
++-----+-------+--------+
+|   1 | 张三   | 妖     |
++-----+-------+--------+
+1 row in set (0.00 sec)
+</code></pre><ul><li>再举例</li></ul><pre class="language-"><code class="lang-mysql">CREATE TABLE temp(
+id INT AUTO_INCREMENT,
+NAME VARCHAR(20),
+age INT CHECK(age &gt; 20),
+PRIMARY KEY(id)
+);
+</code></pre><ul><li>再举例</li></ul><pre class="language-"><code class="lang-mysql">age tinyint check(age &gt;20) 或 sex char(2) check(sex in(‘男’,’女’))
+</code></pre><ul><li>再举例</li></ul><pre class="language-"><code class="lang-mysql">CHECK(height&gt;=0 AND height&lt;3)
+</code></pre><h2 id="8-default约束"><a name="8-default约束" class="anchor-navigation-ex-anchor" href="#8-default约束"><i class="fa fa-link" aria-hidden="true"></i></a>8. 8. DEFAULT约束</h2><h3 id="81-作用"><a name="81-作用" class="anchor-navigation-ex-anchor" href="#81-作用"><i class="fa fa-link" aria-hidden="true"></i></a>8.1. 8.1 作用</h3><p>给某个字段/某列指定默认值，一旦设置默认值，在插入数据时，如果此字段没有显式赋值，则赋值为默认值。</p><h3 id="82-关键字"><a name="82-关键字" class="anchor-navigation-ex-anchor" href="#82-关键字"><i class="fa fa-link" aria-hidden="true"></i></a>8.2. 8.2 关键字</h3><p>DEFAULT</p><h3 id="83-如何给字段加默认值"><a name="83-如何给字段加默认值" class="anchor-navigation-ex-anchor" href="#83-如何给字段加默认值"><i class="fa fa-link" aria-hidden="true"></i></a>8.3. 8.3 如何给字段加默认值</h3><p>（1）建表时</p><pre class="language-"><code class="lang-mysql">create table 表名称(
+    字段名  数据类型  primary key,
+    字段名  数据类型  unique key not null,  
+    字段名  数据类型  unique key,
+    字段名  数据类型  not null default 默认值, 
+);
+create table 表名称(
+    字段名  数据类型 default 默认值 ,
+    字段名  数据类型 not null default 默认值,  
+    字段名  数据类型 not null default 默认值,
+    primary key(字段名),
+    unique key(字段名)
+);
+
+说明：默认值约束一般不在唯一键和主键列上加
+</code></pre><pre class="language-"><code class="lang-mysql">create table employee(
+    eid int primary key,
+    ename varchar(20) not null,
+    gender char default &apos;男&apos;,
+    tel char(11) not null default &apos;&apos; #默认是空字符串
+);
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; desc employee;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| eid    | int(11)     | NO   | PRI | NULL    |       |
+| ename  | varchar(20) | NO   |     | NULL    |       |
+| gender | char(1)     | YES  |     | 男      |       |
+| tel    | char(11)    | NO   |     |         |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">insert into employee values(1,&apos;汪飞&apos;,&apos;男&apos;,&apos;13700102535&apos;); #成功
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from employee;
++-----+-------+--------+-------------+
+| eid | ename | gender | tel         |
++-----+-------+--------+-------------+
+|   1 | 汪飞  | 男     | 13700102535 |
++-----+-------+--------+-------------+
+1 row in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">insert into employee(eid,ename) values(2,&apos;天琪&apos;); #成功
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; select * from employee;
++-----+-------+--------+-------------+
+| eid | ename | gender | tel         |
++-----+-------+--------+-------------+
+|   1 | 汪飞  | 男     | 13700102535 |
+|   2 | 天琪  | 男     |             |
++-----+-------+--------+-------------+
+2 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">insert into employee(eid,ename) values(3,&apos;二虎&apos;);
+#ERROR 1062 (23000): Duplicate entry &apos;&apos; for key &apos;tel&apos;  
+#如果tel有唯一性约束的话会报错，如果tel没有唯一性约束，可以添加成功
+</code></pre><p>再举例：</p><pre class="language-"><code class="lang-mysql">CREATE TABLE myemp(
+id INT AUTO_INCREMENT PRIMARY KEY,
+NAME VARCHAR(15),
+salary DOUBLE(10,2) DEFAULT 2000
+);
+</code></pre><p>（2）建表后</p><pre class="language-"><code class="lang-mysql">alter table 表名称 modify 字段名 数据类型 default 默认值;
+
+#如果这个字段原来有非空约束，你还保留非空约束，那么在加默认值约束时，还得保留非空约束，否则非空约束就被删除了
+#同理，在给某个字段加非空约束也一样，如果这个字段原来有默认值约束，你想保留，也要在modify语句中保留默认值约束，否则就删除了
+alter table 表名称 modify 字段名 数据类型 default 默认值 not null;
+</code></pre><pre class="language-"><code class="lang-mysql">create table employee(
+    eid int primary key,
+    ename varchar(20),
+    gender char,
+    tel char(11) not null
+);
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; desc employee;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| eid    | int(11)     | NO   | PRI | NULL    |       |
+| ename  | varchar(20) | YES  |     | NULL    |       |
+| gender | char(1)     | YES  |     | NULL    |       |
+| tel    | char(11)    | NO   |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">alter table employee modify gender char default &apos;男&apos;;  #给gender字段增加默认值约束
+alter table employee modify tel char(11) default &apos;&apos;; #给tel字段增加默认值约束
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; desc employee;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| eid    | int(11)     | NO   | PRI | NULL    |       |
+| ename  | varchar(20) | YES  |     | NULL    |       |
+| gender | char(1)     | YES  |     | 男      |       |
+| tel    | char(11)    | YES  |     |         |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+</code></pre><pre class="language-"><code class="lang-mysql">alter table employee modify tel char(11) default &apos;&apos;  not null;#给tel字段增加默认值约束，并保留非空约束
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; desc employee;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| eid    | int(11)     | NO   | PRI | NULL    |       |
+| ename  | varchar(20) | YES  |     | NULL    |       |
+| gender | char(1)     | YES  |     | 男      |       |
+| tel    | char(11)    | NO   |     |         |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+</code></pre><h3 id="84-如何删除默认值约束"><a name="84-如何删除默认值约束" class="anchor-navigation-ex-anchor" href="#84-如何删除默认值约束"><i class="fa fa-link" aria-hidden="true"></i></a>8.4. 8.4 如何删除默认值约束</h3><pre class="language-"><code class="lang-mysql">alter table 表名称 modify 字段名 数据类型 ;#删除默认值约束，也不保留非空约束
+
+alter table 表名称 modify 字段名 数据类型  not null; #删除默认值约束，保留非空约束
+</code></pre><pre class="language-"><code class="lang-mysql">alter table employee modify gender char; #删除gender字段默认值约束，如果有非空约束，也一并删除
+alter table employee modify tel char(11)  not null;#删除tel字段默认值约束，保留非空约束
+</code></pre><pre class="language-"><code class="lang-mysql">mysql&gt; desc employee;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| eid    | int(11)     | NO   | PRI | NULL    |       |
+| ename  | varchar(20) | YES  |     | NULL    |       |
+| gender | char(1)     | YES  |     | NULL    |       |
+| tel    | char(11)    | NO   |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+</code></pre><h2 id="9-面试"><a name="9-面试" class="anchor-navigation-ex-anchor" href="#9-面试"><i class="fa fa-link" aria-hidden="true"></i></a>9. 9. 面试</h2><p><strong>面试1、为什么建表时，加 not null default &apos;&apos; 或 default 0</strong></p><p>答：不想让表中出现null值。</p><p><strong>面试2、为什么不想要 null 的值</strong></p><p>答:（1）不好比较。null是一种特殊值，比较时只能用专门的is null 和 is not null来比较。碰到运算符，通常返回null。</p><p>​ （2）效率不高。影响提高索引效果。因此，我们往往在建表时 not null default &apos;&apos; 或 default 0</p><p><strong>面试3、带AUTO_INCREMENT约束的字段值是从1开始的吗？</strong> 在MySQL中，默认AUTO_INCREMENT的初始值是1，每新增一条记录，字段值自动加1。设置自增属性（AUTO_INCREMENT）的时候，还可以指定第一条插入记录的自增字段的值，这样新插入的记录的自增字段值从初始值开始递增，如在表中插入第一条记录，同时指定id值为5，则以后插入的记录的id值就会从6开始往上增加。添加主键约束时，往往需要设置字段自动增加属性。</p><p><strong>面试4、并不是每个表都可以任意选择存储引擎？</strong> 外键约束（FOREIGN KEY）不能跨引擎使用。</p><p>MySQL支持多种存储引擎，每一个表都可以指定一个不同的存储引擎，需要注意的是：外键约束是用来保证数据的参照完整性的，如果表之间需要关联外键，却指定了不同的存储引擎，那么这些表之间是不能创建外键约束的。所以说，存储引擎的选择也不完全是随意的。</p></section></div><div class="search-results"><div class="has-results"><h1 class="search-results-title"><span class="search-results-count"></span> results matching "<span class="search-query"></span>"</h1><ul class="search-results-list"></ul></div><div class="no-results"><h1 class="search-results-title">No results matching "<span class="search-query"></span>"</h1></div></div></div></div></div></div><a href="12.html" class="navigation navigation-prev" aria-label="Previous page: 第12章_MySQL数据类型精讲"><i class="fa fa-angle-left"></i> </a><a href="14.html" class="navigation navigation-next" aria-label="Next page: 第14章_视图"><i class="fa fa-angle-right"></i></a></div><script>var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"第13章_约束","level":"1.15","depth":1,"next":{"title":"第14章_视图","level":"1.16","depth":1,"path":"docs/14.md","ref":"./docs/14.md","articles":[]},"previous":{"title":"第12章_MySQL数据类型精讲","level":"1.14","depth":1,"path":"docs/12.md","ref":"./docs/12.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","-highlight","-sharing","search-plus","anchor-navigation-ex","prism","splitter","image-captions-extended","fancybox","image-wrapper"],"styles":{"website":"styles/website.css"},"pluginsConfig":{"image-wrapper":{},"prism":{},"fancybox":{"helpers":{"buttons":{}}},"splitter":{},"image-captions-extended":{},"fontsettings":{"theme":"white","family":"sans","size":2},"anchor-navigation-ex":{"showLevel":true,"associatedWithSummary":true,"mode":"float","showGoTop":true,"printLog":false,"multipleH1":false,"float":{"floatIcon":"fa fa-navicon","showLevelIcon":false,"level1Icon":"","level2Icon":"","level3Icon":""},"pageTop":{"showLevelIcon":false,"level1Icon":"","level2Icon":"","level3Icon":""}},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"search-plus":{},"image-captions":{"caption":"图：_CAPTION_","variable_name":"_pictures"}},"theme":"default","author":"王顶","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"_pictures":[{"backlink":"./docs/01.html#fig1.3.1","level":"1.3","list_caption":"Figure: image-20211020202152071","alt":"image-20211020202152071","nro":1,"url":"images/image-20211020202152071.png","index":1,"caption_template":"图：_CAPTION_","label":"image-20211020202152071","attributes":{},"skip":false,"key":"1.3.1"},{"backlink":"./docs/01.html#fig1.3.2","level":"1.3","list_caption":"Figure: image-20211013202511233","alt":"image-20211013202511233","nro":2,"url":"images/image-20211013202511233.png","index":2,"caption_template":"图：_CAPTION_","label":"image-20211013202511233","attributes":{},"skip":false,"key":"1.3.2"},{"backlink":"./docs/01.html#fig1.3.3","level":"1.3","list_caption":"Figure: image-20210915112546261","alt":"image-20210915112546261","nro":3,"url":"images/image-20210915112546261.png","index":3,"caption_template":"图：_CAPTION_","label":"image-20210915112546261","attributes":{},"skip":false,"key":"1.3.3"},{"backlink":"./docs/01.html#fig1.3.4","level":"1.3","list_caption":"Figure: image-20211013202815851","alt":"image-20211013202815851","nro":4,"url":"images/image-20211013202815851.png","index":4,"caption_template":"图：_CAPTION_","label":"image-20211013202815851","attributes":{},"skip":false,"key":"1.3.4"},{"backlink":"./docs/01.html#fig1.3.5","level":"1.3","list_caption":"Figure: image-20211013202940798","alt":"image-20211013202940798","nro":5,"url":"images/image-20211013202940798.png","index":5,"caption_template":"图：_CAPTION_","label":"image-20211013202940798","attributes":{},"skip":false,"key":"1.3.5"},{"backlink":"./docs/01.html#fig1.3.6","level":"1.3","list_caption":"Figure: image-20211013203029492","alt":"image-20211013203029492","nro":6,"url":"images/image-20211013203029492.png","index":6,"caption_template":"图：_CAPTION_","label":"image-20211013203029492","attributes":{},"skip":false,"key":"1.3.6"},{"backlink":"./docs/01.html#fig1.3.7","level":"1.3","list_caption":"Figure: image-20210829230656830","alt":"image-20210829230656830","nro":7,"url":"images/image-20210829230656830.png","index":7,"caption_template":"图：_CAPTION_","label":"image-20210829230656830","attributes":{},"skip":false,"key":"1.3.7"},{"backlink":"./docs/01.html#fig1.3.8","level":"1.3","list_caption":"Figure: image-20210730161043856","alt":"image-20210730161043856","nro":8,"url":"images/image-20210730161043856.png","index":8,"caption_template":"图：_CAPTION_","label":"image-20210730161043856","attributes":{},"skip":false,"key":"1.3.8"},{"backlink":"./docs/01.html#fig1.3.9","level":"1.3","list_caption":"Figure: image-20211013210429011","alt":"image-20211013210429011","nro":9,"url":"images/image-20211013210429011.png","index":9,"caption_template":"图：_CAPTION_","label":"image-20211013210429011","attributes":{},"skip":false,"key":"1.3.9"},{"backlink":"./docs/01.html#fig1.3.10","level":"1.3","list_caption":"Figure: image-20211020145811031","alt":"image-20211020145811031","nro":10,"url":"images/image-20211020145811031.png","index":10,"caption_template":"图：_CAPTION_","label":"image-20211020145811031","attributes":{},"skip":false,"key":"1.3.10"},{"backlink":"./docs/01.html#fig1.3.11","level":"1.3","list_caption":"Figure: image-20210914235413708","alt":"image-20210914235413708","nro":11,"url":"images/image-20210914235413708.png","index":11,"caption_template":"图：_CAPTION_","label":"image-20210914235413708","attributes":{},"skip":false,"key":"1.3.11"},{"backlink":"./docs/01.html#fig1.3.12","level":"1.3","list_caption":"Figure: image-20211020172958427","alt":"image-20211020172958427","nro":12,"url":"images/image-20211020172958427.png","index":12,"caption_template":"图：_CAPTION_","label":"image-20211020172958427","attributes":{},"skip":false,"key":"1.3.12"},{"backlink":"./docs/01.html#fig1.3.13","level":"1.3","list_caption":"Figure: image-20211020173921726","alt":"image-20211020173921726","nro":13,"url":"images/image-20211020173921726.png","index":13,"caption_template":"图：_CAPTION_","label":"image-20211020173921726","attributes":{},"skip":false,"key":"1.3.13"},{"backlink":"./docs/01.html#fig1.3.14","level":"1.3","list_caption":"Figure: image-20211020180934455","alt":"image-20211020180934455","nro":14,"url":"images/image-20211020180934455.png","index":14,"caption_template":"图：_CAPTION_","label":"image-20211020180934455","attributes":{},"skip":false,"key":"1.3.14"},{"backlink":"./docs/01.html#fig1.3.15","level":"1.3","list_caption":"Figure: image-20210914235450032","alt":"image-20210914235450032","nro":15,"url":"images/image-20210914235450032-1634141235163.png","index":15,"caption_template":"图：_CAPTION_","label":"image-20210914235450032","attributes":{},"skip":false,"key":"1.3.15"},{"backlink":"./docs/01.html#fig1.3.16","level":"1.3","list_caption":"Figure: image-20210914235534452","alt":"image-20210914235534452","nro":16,"url":"images/image-20210914235534452.png","index":16,"caption_template":"图：_CAPTION_","label":"image-20210914235534452","attributes":{},"skip":false,"key":"1.3.16"},{"backlink":"./docs/01.html#fig1.3.17","level":"1.3","list_caption":"Figure: image-20210915001013524","alt":"image-20210915001013524","nro":17,"url":"images/image-20210915001013524.png","index":17,"caption_template":"图：_CAPTION_","label":"image-20210915001013524","attributes":{},"skip":false,"key":"1.3.17"},{"backlink":"./docs/01.html#fig1.3.18","level":"1.3","list_caption":"Figure: image-20210914235610597","alt":"image-20210914235610597","nro":18,"url":"images/image-20210914235610597.png","index":18,"caption_template":"图：_CAPTION_","label":"image-20210914235610597","attributes":{},"skip":false,"key":"1.3.18"},{"backlink":"./docs/01.html#fig1.3.19","level":"1.3","list_caption":"Figure: image-20210915084623432","alt":"image-20210915084623432","nro":19,"url":"images/image-20210915084623432.png","index":19,"caption_template":"图：_CAPTION_","label":"image-20210915084623432","attributes":{},"skip":false,"key":"1.3.19"},{"backlink":"./docs/01.html#fig1.3.20","level":"1.3","list_caption":"Figure: image-20210915001048215","alt":"image-20210915001048215","nro":20,"url":"images/image-20210915001048215.png","index":20,"caption_template":"图：_CAPTION_","label":"image-20210915001048215","attributes":{},"skip":false,"key":"1.3.20"},{"backlink":"./docs/01.html#fig1.3.21","level":"1.3","list_caption":"Figure: image-20210914235637068","alt":"image-20210914235637068","nro":21,"url":"images/image-20210914235637068.png","index":21,"caption_template":"图：_CAPTION_","label":"image-20210914235637068","attributes":{},"skip":false,"key":"1.3.21"},{"backlink":"./docs/01.html#fig1.3.22","level":"1.3","list_caption":"Figure: image-20210915084707586","alt":"image-20210915084707586","nro":22,"url":"images/image-20210915084707586.png","index":22,"caption_template":"图：_CAPTION_","label":"image-20210915084707586","attributes":{},"skip":false,"key":"1.3.22"},{"backlink":"./docs/01.html#fig1.3.23","level":"1.3","list_caption":"Figure: image-20210914235651997","alt":"image-20210914235651997","nro":23,"url":"images/image-20210914235651997.png","index":23,"caption_template":"图：_CAPTION_","label":"image-20210914235651997","attributes":{},"skip":false,"key":"1.3.23"},{"backlink":"./docs/02.html#fig1.4.1","level":"1.4","list_caption":"Figure: image-20211014153604802","alt":"image-20211014153604802","nro":24,"url":"images/image-20211014153604802.png","index":1,"caption_template":"图：_CAPTION_","label":"image-20211014153604802","attributes":{},"skip":false,"key":"1.4.1"},{"backlink":"./docs/02.html#fig1.4.2","level":"1.4","list_caption":"Figure: image-20211014153657668","alt":"image-20211014153657668","nro":25,"url":"images/image-20211014153657668.png","index":2,"caption_template":"图：_CAPTION_","label":"image-20211014153657668","attributes":{},"skip":false,"key":"1.4.2"},{"backlink":"./docs/02.html#fig1.4.3","level":"1.4","list_caption":"Figure: image-20211014153722683","alt":"image-20211014153722683","nro":26,"url":"images/image-20211014153722683.png","index":3,"caption_template":"图：_CAPTION_","label":"image-20211014153722683","attributes":{},"skip":false,"key":"1.4.3"},{"backlink":"./docs/02.html#fig1.4.4","level":"1.4","list_caption":"Figure: image-20211014153747283","alt":"image-20211014153747283","nro":27,"url":"images/image-20211014153747283.png","index":4,"caption_template":"图：_CAPTION_","label":"image-20211014153747283","attributes":{},"skip":false,"key":"1.4.4"},{"backlink":"./docs/02.html#fig1.4.5","level":"1.4","list_caption":"Figure: image-20211014154112574","alt":"image-20211014154112574","nro":28,"url":"images/image-20211014154112574.png","index":5,"caption_template":"图：_CAPTION_","label":"image-20211014154112574","attributes":{},"skip":false,"key":"1.4.5"},{"backlink":"./docs/02.html#fig1.4.6","level":"1.4","list_caption":"Figure: image-20211014154006530","alt":"image-20211014154006530","nro":29,"url":"images/image-20211014154006530.png","index":6,"caption_template":"图：_CAPTION_","label":"image-20211014154006530","attributes":{},"skip":false,"key":"1.4.6"},{"backlink":"./docs/02.html#fig1.4.7","level":"1.4","list_caption":"Figure: image-20211014154046268","alt":"image-20211014154046268","nro":30,"url":"images/image-20211014154046268.png","index":7,"caption_template":"图：_CAPTION_","label":"image-20211014154046268","attributes":{},"skip":false,"key":"1.4.7"},{"backlink":"./docs/02.html#fig1.4.8","level":"1.4","list_caption":"Figure: 1575694476072","alt":"1575694476072","nro":31,"url":"images/1575694476072.png","index":8,"caption_template":"图：_CAPTION_","label":"1575694476072","attributes":{},"skip":false,"key":"1.4.8"},{"backlink":"./docs/02.html#fig1.4.9","level":"1.4","list_caption":"Figure: image-20210817185920150","alt":"image-20210817185920150","nro":32,"url":"images/image-20210817185920150.png","index":9,"caption_template":"图：_CAPTION_","label":"image-20210817185920150","attributes":{},"skip":false,"key":"1.4.9"},{"backlink":"./docs/02.html#fig1.4.10","level":"1.4","list_caption":"Figure: image-20210727192819147","alt":"image-20210727192819147","nro":33,"url":"images/image-20210727192819147.png","index":10,"caption_template":"图：_CAPTION_","label":"image-20210727192819147","attributes":{},"skip":false,"key":"1.4.10"},{"backlink":"./docs/02.html#fig1.4.11","level":"1.4","list_caption":"Figure: image-20211014163001964","alt":"image-20211014163001964","nro":34,"url":"images/image-20211014163001964.png","index":11,"caption_template":"图：_CAPTION_","label":"image-20211014163001964","attributes":{},"skip":false,"key":"1.4.11"},{"backlink":"./docs/02.html#fig1.4.12","level":"1.4","list_caption":"Figure: image-20211014163228051","alt":"image-20211014163228051","nro":35,"url":"images/image-20211014163228051.png","index":12,"caption_template":"图：_CAPTION_","label":"image-20211014163228051","attributes":{},"skip":false,"key":"1.4.12"},{"backlink":"./docs/02.html#fig1.4.13","level":"1.4","list_caption":"Figure: image-20211014163353156","alt":"image-20211014163353156","nro":36,"url":"images/image-20211014163353156.png","index":13,"caption_template":"图：_CAPTION_","label":"image-20211014163353156","attributes":{},"skip":false,"key":"1.4.13"},{"backlink":"./docs/02.html#fig1.4.14","level":"1.4","list_caption":"Figure: image-20211014170553535","alt":"image-20211014170553535","nro":37,"url":"images/image-20211014170553535.png","index":14,"caption_template":"图：_CAPTION_","label":"image-20211014170553535","attributes":{},"skip":false,"key":"1.4.14"},{"backlink":"./docs/02.html#fig1.4.15","level":"1.4","list_caption":"Figure: image-20211014170638699","alt":"image-20211014170638699","nro":38,"url":"images/image-20211014170638699.png","index":15,"caption_template":"图：_CAPTION_","label":"image-20211014170638699","attributes":{},"skip":false,"key":"1.4.15"},{"backlink":"./docs/02.html#fig1.4.16","level":"1.4","list_caption":"Figure: image-20211014170814386","alt":"image-20211014170814386","nro":39,"url":"images/image-20211014170814386.png","index":16,"caption_template":"图：_CAPTION_","label":"image-20211014170814386","attributes":{},"skip":false,"key":"1.4.16"},{"backlink":"./docs/02.html#fig1.4.17","level":"1.4","list_caption":"Figure: image-20211014170857263","alt":"image-20211014170857263","nro":40,"url":"images/image-20211014170857263.png","index":17,"caption_template":"图：_CAPTION_","label":"image-20211014170857263","attributes":{},"skip":false,"key":"1.4.17"},{"backlink":"./docs/02.html#fig1.4.18","level":"1.4","list_caption":"Figure: image-20211014170934889","alt":"image-20211014170934889","nro":41,"url":"images/image-20211014170934889.png","index":18,"caption_template":"图：_CAPTION_","label":"image-20211014170934889","attributes":{},"skip":false,"key":"1.4.18"},{"backlink":"./docs/02.html#fig1.4.19","level":"1.4","list_caption":"Figure: image-20211014171002259","alt":"image-20211014171002259","nro":42,"url":"images/image-20211014171002259.png","index":19,"caption_template":"图：_CAPTION_","label":"image-20211014171002259","attributes":{},"skip":false,"key":"1.4.19"},{"backlink":"./docs/02.html#fig1.4.20","level":"1.4","list_caption":"Figure: img","alt":"img","nro":43,"url":"images/clip_image002-1634203188594.jpg","index":20,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.4.20"},{"backlink":"./docs/02.html#fig1.4.21","level":"1.4","list_caption":"Figure: img","alt":"img","nro":44,"url":"images/clip_image004-1634203188595.jpg","index":21,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.4.21"},{"backlink":"./docs/02.html#fig1.4.22","level":"1.4","list_caption":"Figure: img","alt":"img","nro":45,"url":"images/clip_image006-1634203188595.jpg","index":22,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.4.22"},{"backlink":"./docs/02.html#fig1.4.23","level":"1.4","list_caption":"Figure: img","alt":"img","nro":46,"url":"images/clip_image008-1634203188595.jpg","index":23,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.4.23"},{"backlink":"./docs/02.html#fig1.4.24","level":"1.4","list_caption":"Figure: img","alt":"img","nro":47,"url":"images/clip_image010-1634203188595.jpg","index":24,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.4.24"},{"backlink":"./docs/02.html#fig1.4.25","level":"1.4","list_caption":"Figure: img","alt":"img","nro":48,"url":"images/clip_image012-1634203188596.jpg","index":25,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.4.25"},{"backlink":"./docs/02.html#fig1.4.26","level":"1.4","list_caption":"Figure: img","alt":"img","nro":49,"url":"images/clip_image014-1634203188596.jpg","index":26,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.4.26"},{"backlink":"./docs/02.html#fig1.4.27","level":"1.4","list_caption":"Figure: img","alt":"img","nro":50,"url":"images/clip_image016.jpg","index":27,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.4.27"},{"backlink":"./docs/02.html#fig1.4.28","level":"1.4","list_caption":"Figure: img","alt":"img","nro":51,"url":"images/clip_image018.jpg","index":28,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.4.28"},{"backlink":"./docs/02.html#fig1.4.29","level":"1.4","list_caption":"Figure: img","alt":"img","nro":52,"url":"images/clip_image020.jpg","index":29,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.4.29"},{"backlink":"./docs/02.html#fig1.4.30","level":"1.4","list_caption":"Figure: img","alt":"img","nro":53,"url":"images/clip_image002.gif","index":30,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.4.30"},{"backlink":"./docs/02.html#fig1.4.31","level":"1.4","list_caption":"Figure: img","alt":"img","nro":54,"url":"images/clip_image004.gif","index":31,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.4.31"},{"backlink":"./docs/02.html#fig1.4.32","level":"1.4","list_caption":"Figure: img","alt":"img","nro":55,"url":"images/clip_image006.gif","index":32,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.4.32"},{"backlink":"./docs/02.html#fig1.4.33","level":"1.4","list_caption":"Figure: image-20211014183908375","alt":"image-20211014183908375","nro":56,"url":"images/image-20211014183908375.png","index":33,"caption_template":"图：_CAPTION_","label":"image-20211014183908375","attributes":{},"skip":false,"key":"1.4.33"},{"backlink":"./docs/02.html#fig1.4.34","level":"1.4","list_caption":"Figure: image-20211014184037414","alt":"image-20211014184037414","nro":57,"url":"images/image-20211014184037414.png","index":34,"caption_template":"图：_CAPTION_","label":"image-20211014184037414","attributes":{},"skip":false,"key":"1.4.34"},{"backlink":"./docs/02.html#fig1.4.35","level":"1.4","list_caption":"Figure: image-20211014184425147","alt":"image-20211014184425147","nro":58,"url":"images/image-20211014184425147.png","index":35,"caption_template":"图：_CAPTION_","label":"image-20211014184425147","attributes":{},"skip":false,"key":"1.4.35"},{"backlink":"./docs/02.html#fig1.4.36","level":"1.4","list_caption":"Figure: image-20211014185035137","alt":"image-20211014185035137","nro":59,"url":"images/image-20211014185035137.png","index":36,"caption_template":"图：_CAPTION_","label":"image-20211014185035137","attributes":{},"skip":false,"key":"1.4.36"},{"backlink":"./docs/02.html#fig1.4.37","level":"1.4","list_caption":"Figure: image-20211007153522427","alt":"image-20211007153522427","nro":60,"url":"images/image-20211007153522427.png","index":37,"caption_template":"图：_CAPTION_","label":"image-20211007153522427","attributes":{},"skip":false,"key":"1.4.37"},{"backlink":"./docs/02.html#fig1.4.38","level":"1.4","list_caption":"Figure: image-20211014195108502","alt":"image-20211014195108502","nro":61,"url":"images/image-20211014195108502.png","index":38,"caption_template":"图：_CAPTION_","label":"image-20211014195108502","attributes":{},"skip":false,"key":"1.4.38"},{"backlink":"./docs/02.html#fig1.4.39","level":"1.4","list_caption":"Figure: image-20211014195129219","alt":"image-20211014195129219","nro":62,"url":"images/image-20211014195129219.png","index":39,"caption_template":"图：_CAPTION_","label":"image-20211014195129219","attributes":{},"skip":false,"key":"1.4.39"},{"backlink":"./docs/02.html#fig1.4.40","level":"1.4","list_caption":"Figure: image-20211014195142849","alt":"image-20211014195142849","nro":63,"url":"images/image-20211014195142849.png","index":40,"caption_template":"图：_CAPTION_","label":"image-20211014195142849","attributes":{},"skip":false,"key":"1.4.40"},{"backlink":"./docs/02.html#fig1.4.41","level":"1.4","list_caption":"Figure: image-20210913180359685","alt":"image-20210913180359685","nro":64,"url":"images/image-20210913180359685.png","index":41,"caption_template":"图：_CAPTION_","label":"image-20210913180359685","attributes":{},"skip":false,"key":"1.4.41"},{"backlink":"./docs/02.html#fig1.4.42","level":"1.4","list_caption":"Figure: image-20211014213018979","alt":"image-20211014213018979","nro":65,"url":"images/image-20211014213018979.png","index":42,"caption_template":"图：_CAPTION_","label":"image-20211014213018979","attributes":{},"skip":false,"key":"1.4.42"},{"backlink":"./docs/02.html#fig1.4.43","level":"1.4","list_caption":"Figure: image-20211014213036470","alt":"image-20211014213036470","nro":66,"url":"images/image-20211014213036470.png","index":43,"caption_template":"图：_CAPTION_","label":"image-20211014213036470","attributes":{},"skip":false,"key":"1.4.43"},{"backlink":"./docs/02.html#fig1.4.44","level":"1.4","list_caption":"Figure: image-20211014195237457","alt":"image-20211014195237457","nro":67,"url":"images/image-20211014195237457.png","index":44,"caption_template":"图：_CAPTION_","label":"image-20211014195237457","attributes":{},"skip":false,"key":"1.4.44"},{"backlink":"./docs/02.html#fig1.4.45","level":"1.4","list_caption":"Figure: image-20211014195251371","alt":"image-20211014195251371","nro":68,"url":"images/image-20211014195251371.png","index":45,"caption_template":"图：_CAPTION_","label":"image-20211014195251371","attributes":{},"skip":false,"key":"1.4.45"},{"backlink":"./docs/02.html#fig1.4.46","level":"1.4","list_caption":"Figure: image-20211014195300510","alt":"image-20211014195300510","nro":69,"url":"images/image-20211014195300510.png","index":46,"caption_template":"图：_CAPTION_","label":"image-20211014195300510","attributes":{},"skip":false,"key":"1.4.46"},{"backlink":"./docs/02.html#fig1.4.47","level":"1.4","list_caption":"Figure: image-20211014195309805","alt":"image-20211014195309805","nro":70,"url":"images/image-20211014195309805.png","index":47,"caption_template":"图：_CAPTION_","label":"image-20211014195309805","attributes":{},"skip":false,"key":"1.4.47"},{"backlink":"./docs/02.html#fig1.4.48","level":"1.4","list_caption":"Figure: image-20211019215249254","alt":"image-20211019215249254","nro":71,"url":"images/image-20211019215249254.png","index":48,"caption_template":"图：_CAPTION_","label":"image-20211019215249254","attributes":{},"skip":false,"key":"1.4.48"},{"backlink":"./docs/02.html#fig1.4.49","level":"1.4","list_caption":"Figure: image-20211019215408965","alt":"image-20211019215408965","nro":72,"url":"images/image-20211019215408965.png","index":49,"caption_template":"图：_CAPTION_","label":"image-20211019215408965","attributes":{},"skip":false,"key":"1.4.49"},{"backlink":"./docs/02.html#fig1.4.50","level":"1.4","list_caption":"Figure: image-20211007154113052","alt":"image-20211007154113052","nro":73,"url":"images/image-20211007154113052.png","index":50,"caption_template":"图：_CAPTION_","label":"image-20211007154113052","attributes":{},"skip":false,"key":"1.4.50"},{"backlink":"./docs/02.html#fig1.4.51","level":"1.4","list_caption":"Figure: image-20211007154213156","alt":"image-20211007154213156","nro":74,"url":"images/image-20211007154213156.png","index":51,"caption_template":"图：_CAPTION_","label":"image-20211007154213156","attributes":{},"skip":false,"key":"1.4.51"},{"backlink":"./docs/02.html#fig1.4.52","level":"1.4","list_caption":"Figure: image-20210914093150145","alt":"image-20210914093150145","nro":75,"url":"images/image-20210914093150145.png","index":52,"caption_template":"图：_CAPTION_","label":"image-20210914093150145","attributes":{},"skip":false,"key":"1.4.52"},{"backlink":"./docs/02.html#fig1.4.53","level":"1.4","list_caption":"Figure: 1554912924219","alt":"1554912924219","nro":76,"url":"images/1554912924219.png","index":53,"caption_template":"图：_CAPTION_","label":"1554912924219","attributes":{},"skip":false,"key":"1.4.53"},{"backlink":"./docs/02.html#fig1.4.54","level":"1.4","list_caption":"Figure: 1554912943186","alt":"1554912943186","nro":77,"url":"images/1554912943186.png","index":54,"caption_template":"图：_CAPTION_","label":"1554912943186","attributes":{},"skip":false,"key":"1.4.54"},{"backlink":"./docs/02.html#fig1.4.55","level":"1.4","list_caption":"Figure: 1554912957353","alt":"1554912957353","nro":78,"url":"images/1554912957353.png","index":55,"caption_template":"图：_CAPTION_","label":"1554912957353","attributes":{},"skip":false,"key":"1.4.55"},{"backlink":"./docs/03.html#fig1.5.1","level":"1.5","list_caption":"Figure: SQLisputonghua","alt":"SQLisputonghua","nro":79,"url":"images/SQLisputonghua.jpg","index":1,"caption_template":"图：_CAPTION_","label":"SQLisputonghua","attributes":{},"skip":false,"key":"1.5.1"},{"backlink":"./docs/03.html#fig1.5.2","level":"1.5","list_caption":"Figure: image-20211014230114639","alt":"image-20211014230114639","nro":80,"url":"images/image-20211014230114639.png","index":2,"caption_template":"图：_CAPTION_","label":"image-20211014230114639","attributes":{},"skip":false,"key":"1.5.2"},{"backlink":"./docs/03.html#fig1.5.3","level":"1.5","list_caption":"Figure: 1554950890895","alt":"1554950890895","nro":81,"url":"images/1554950890895.png","index":3,"caption_template":"图：_CAPTION_","label":"1554950890895","attributes":{},"skip":false,"key":"1.5.3"},{"backlink":"./docs/03.html#fig1.5.4","level":"1.5","list_caption":"Figure: 1554950947969","alt":"1554950947969","nro":82,"url":"images/1554950947969.png","index":4,"caption_template":"图：_CAPTION_","label":"1554950947969","attributes":{},"skip":false,"key":"1.5.4"},{"backlink":"./docs/03.html#fig1.5.5","level":"1.5","list_caption":"Figure: 1554951616598","alt":"1554951616598","nro":83,"url":"images/1554951616598.png","index":5,"caption_template":"图：_CAPTION_","label":"1554951616598","attributes":{},"skip":false,"key":"1.5.5"},{"backlink":"./docs/03.html#fig1.5.6","level":"1.5","list_caption":"Figure: 1554951622467","alt":"1554951622467","nro":84,"url":"images/1554951622467.png","index":6,"caption_template":"图：_CAPTION_","label":"1554951622467","attributes":{},"skip":false,"key":"1.5.6"},{"backlink":"./docs/03.html#fig1.5.7","level":"1.5","list_caption":"Figure: 1554951648377","alt":"1554951648377","nro":85,"url":"images/1554951648377.png","index":7,"caption_template":"图：_CAPTION_","label":"1554951648377","attributes":{},"skip":false,"key":"1.5.7"},{"backlink":"./docs/03.html#fig1.5.8","level":"1.5","list_caption":"Figure: 1554951655368","alt":"1554951655368","nro":86,"url":"images/1554951655368.png","index":8,"caption_template":"图：_CAPTION_","label":"1554951655368","attributes":{},"skip":false,"key":"1.5.8"},{"backlink":"./docs/03.html#fig1.5.9","level":"1.5","list_caption":"Figure: 1554951711115","alt":"1554951711115","nro":87,"url":"images/1554951711115.png","index":9,"caption_template":"图：_CAPTION_","label":"1554951711115","attributes":{},"skip":false,"key":"1.5.9"},{"backlink":"./docs/03.html#fig1.5.10","level":"1.5","list_caption":"Figure: 1554951715923","alt":"1554951715923","nro":88,"url":"images/1554951715923.png","index":10,"caption_template":"图：_CAPTION_","label":"1554951715923","attributes":{},"skip":false,"key":"1.5.10"},{"backlink":"./docs/03.html#fig1.5.11","level":"1.5","list_caption":"Figure: 1554951796570","alt":"1554951796570","nro":89,"url":"images/1554951796570.png","index":11,"caption_template":"图：_CAPTION_","label":"1554951796570","attributes":{},"skip":false,"key":"1.5.11"},{"backlink":"./docs/03.html#fig1.5.12","level":"1.5","list_caption":"Figure: 1554951801044","alt":"1554951801044","nro":90,"url":"images/1554951801044.png","index":12,"caption_template":"图：_CAPTION_","label":"1554951801044","attributes":{},"skip":false,"key":"1.5.12"},{"backlink":"./docs/03.html#fig1.5.13","level":"1.5","list_caption":"Figure: 1554952199742","alt":"1554952199742","nro":91,"url":"images/1554952199742.png","index":13,"caption_template":"图：_CAPTION_","label":"1554952199742","attributes":{},"skip":false,"key":"1.5.13"},{"backlink":"./docs/03.html#fig1.5.14","level":"1.5","list_caption":"Figure: 1554952277028","alt":"1554952277028","nro":92,"url":"images/1554952277028.png","index":14,"caption_template":"图：_CAPTION_","label":"1554952277028","attributes":{},"skip":false,"key":"1.5.14"},{"backlink":"./docs/04.html#fig1.6.1","level":"1.6","list_caption":"Figure: image-20211012100749193","alt":"image-20211012100749193","nro":93,"url":"images/image-20211012100749193.png","index":1,"caption_template":"图：_CAPTION_","label":"image-20211012100749193","attributes":{},"skip":false,"key":"1.6.1"},{"backlink":"./docs/04.html#fig1.6.2","level":"1.6","list_caption":"Figure: image-20211012101110021","alt":"image-20211012101110021","nro":94,"url":"images/image-20211012101110021.png","index":2,"caption_template":"图：_CAPTION_","label":"image-20211012101110021","attributes":{},"skip":false,"key":"1.6.2"},{"backlink":"./docs/04.html#fig1.6.3","level":"1.6","list_caption":"Figure: image-20211012104955094","alt":"image-20211012104955094","nro":95,"url":"images/image-20211012104955094.png","index":3,"caption_template":"图：_CAPTION_","label":"image-20211012104955094","attributes":{},"skip":false,"key":"1.6.3"},{"backlink":"./docs/04.html#fig1.6.4","level":"1.6","list_caption":"Figure: image-20211012105303219","alt":"image-20211012105303219","nro":96,"url":"images/image-20211012105303219.png","index":4,"caption_template":"图：_CAPTION_","label":"image-20211012105303219","attributes":{},"skip":false,"key":"1.6.4"},{"backlink":"./docs/04.html#fig1.6.5","level":"1.6","list_caption":"Figure: image-20211012105030527","alt":"image-20211012105030527","nro":97,"url":"images/image-20211012105030527.png","index":5,"caption_template":"图：_CAPTION_","label":"image-20211012105030527","attributes":{},"skip":false,"key":"1.6.5"},{"backlink":"./docs/04.html#fig1.6.6","level":"1.6","list_caption":"Figure: image-20211012105052456","alt":"image-20211012105052456","nro":98,"url":"images/image-20211012105052456.png","index":6,"caption_template":"图：_CAPTION_","label":"image-20211012105052456","attributes":{},"skip":false,"key":"1.6.6"},{"backlink":"./docs/04.html#fig1.6.7","level":"1.6","list_caption":"Figure: image-20211012110241418","alt":"image-20211012110241418","nro":99,"url":"images/image-20211012110241418.png","index":7,"caption_template":"图：_CAPTION_","label":"image-20211012110241418","attributes":{},"skip":false,"key":"1.6.7"},{"backlink":"./docs/04.html#fig1.6.8","level":"1.6","list_caption":"Figure: image-20211012110511223","alt":"image-20211012110511223","nro":100,"url":"images/image-20211012110511223.png","index":8,"caption_template":"图：_CAPTION_","label":"image-20211012110511223","attributes":{},"skip":false,"key":"1.6.8"},{"backlink":"./docs/04.html#fig1.6.9","level":"1.6","list_caption":"Figure: image-20211023115738415","alt":"image-20211023115738415","nro":101,"url":"images/image-20211023115738415.png","index":9,"caption_template":"图：_CAPTION_","label":"image-20211023115738415","attributes":{},"skip":false,"key":"1.6.9"},{"backlink":"./docs/04.html#fig1.6.10","level":"1.6","list_caption":"Figure: image-20211012111042395","alt":"image-20211012111042395","nro":102,"url":"images/image-20211012111042395.png","index":10,"caption_template":"图：_CAPTION_","label":"image-20211012111042395","attributes":{},"skip":false,"key":"1.6.10"},{"backlink":"./docs/04.html#fig1.6.11","level":"1.6","list_caption":"Figure: image-20211012110731059","alt":"image-20211012110731059","nro":103,"url":"images/image-20211012110731059.png","index":11,"caption_template":"图：_CAPTION_","label":"image-20211012110731059","attributes":{},"skip":false,"key":"1.6.11"},{"backlink":"./docs/04.html#fig1.6.12","level":"1.6","list_caption":"Figure: image-20210926151249943","alt":"image-20210926151249943","nro":104,"url":"images/image-20210926151249943.png","index":12,"caption_template":"图：_CAPTION_","label":"image-20210926151249943","attributes":{},"skip":false,"key":"1.6.12"},{"backlink":"./docs/05.html#fig1.7.1","level":"1.7","list_caption":"Figure: 1554974260133","alt":"1554974260133","nro":105,"url":"images/1554974260133.png","index":1,"caption_template":"图：_CAPTION_","label":"1554974260133","attributes":{},"skip":false,"key":"1.7.1"},{"backlink":"./docs/05.html#fig1.7.2","level":"1.7","list_caption":"Figure: 1554974827522","alt":"1554974827522","nro":106,"url":"images/1554974827522.png","index":2,"caption_template":"图：_CAPTION_","label":"1554974827522","attributes":{},"skip":false,"key":"1.7.2"},{"backlink":"./docs/05.html#fig1.7.3","level":"1.7","list_caption":"Figure: 1554974858252","alt":"1554974858252","nro":107,"url":"images/1554974858252.png","index":3,"caption_template":"图：_CAPTION_","label":"1554974858252","attributes":{},"skip":false,"key":"1.7.3"},{"backlink":"./docs/05.html#fig1.7.4","level":"1.7","list_caption":"Figure: 1554974901572","alt":"1554974901572","nro":108,"url":"images/1554974901572.png","index":4,"caption_template":"图：_CAPTION_","label":"1554974901572","attributes":{},"skip":false,"key":"1.7.4"},{"backlink":"./docs/05.html#fig1.7.5","level":"1.7","list_caption":"Figure: 1554974907498","alt":"1554974907498","nro":109,"url":"images/1554974907498.png","index":5,"caption_template":"图：_CAPTION_","label":"1554974907498","attributes":{},"skip":false,"key":"1.7.5"},{"backlink":"./docs/06.html#fig1.8.1","level":"1.8","list_caption":"Figure: 1554974984600","alt":"1554974984600","nro":110,"url":"images/1554974984600.png","index":1,"caption_template":"图：_CAPTION_","label":"1554974984600","attributes":{},"skip":false,"key":"1.8.1"},{"backlink":"./docs/06.html#fig1.8.2","level":"1.8","list_caption":"Figure: 1554975020388","alt":"1554975020388","nro":111,"url":"images/1554975020388.png","index":2,"caption_template":"图：_CAPTION_","label":"1554975020388","attributes":{},"skip":false,"key":"1.8.2"},{"backlink":"./docs/06.html#fig1.8.3","level":"1.8","list_caption":"Figure: 1554975097631","alt":"1554975097631","nro":112,"url":"images/1554975097631.png","index":3,"caption_template":"图：_CAPTION_","label":"1554975097631","attributes":{},"skip":false,"key":"1.8.3"},{"backlink":"./docs/06.html#fig1.8.4","level":"1.8","list_caption":"Figure: img","alt":"img","nro":113,"url":"https://images0.cnblogs.com/i/595518/201403/302046364841977.jpg","index":4,"caption_template":"图：_CAPTION_","label":"img","attributes":{},"skip":false,"key":"1.8.4"},{"backlink":"./docs/06.html#fig1.8.5","level":"1.8","list_caption":"Figure: 1554975496900","alt":"1554975496900","nro":114,"url":"images/1554975496900.png","index":5,"caption_template":"图：_CAPTION_","label":"1554975496900","attributes":{},"skip":false,"key":"1.8.5"},{"backlink":"./docs/06.html#fig1.8.6","level":"1.8","list_caption":"Figure: 1554975522600","alt":"1554975522600","nro":115,"url":"images/1554975522600.png","index":6,"caption_template":"图：_CAPTION_","label":"1554975522600","attributes":{},"skip":false,"key":"1.8.6"},{"backlink":"./docs/06.html#fig1.8.7","level":"1.8","list_caption":"Figure: 1554975526339","alt":"1554975526339","nro":116,"url":"images/1554975526339.png","index":7,"caption_template":"图：_CAPTION_","label":"1554975526339","attributes":{},"skip":false,"key":"1.8.7"},{"backlink":"./docs/06.html#fig1.8.8","level":"1.8","list_caption":"Figure: 1554975606231","alt":"1554975606231","nro":117,"url":"images/1554975606231.png","index":8,"caption_template":"图：_CAPTION_","label":"1554975606231","attributes":{},"skip":false,"key":"1.8.8"},{"backlink":"./docs/06.html#fig1.8.9","level":"1.8","list_caption":"Figure: 1554978354431","alt":"1554978354431","nro":118,"url":"images/1554978354431.png","index":9,"caption_template":"图：_CAPTION_","label":"1554978354431","attributes":{},"skip":false,"key":"1.8.9"},{"backlink":"./docs/06.html#fig1.8.10","level":"1.8","list_caption":"Figure: 1554978442447","alt":"1554978442447","nro":119,"url":"images/1554978442447.png","index":10,"caption_template":"图：_CAPTION_","label":"1554978442447","attributes":{},"skip":false,"key":"1.8.10"},{"backlink":"./docs/06.html#fig1.8.11","level":"1.8","list_caption":"Figure: 1554978477013","alt":"1554978477013","nro":120,"url":"images/1554978477013.png","index":11,"caption_template":"图：_CAPTION_","label":"1554978477013","attributes":{},"skip":false,"key":"1.8.11"},{"backlink":"./docs/06.html#fig1.8.12","level":"1.8","list_caption":"Figure: 1554978482652","alt":"1554978482652","nro":121,"url":"images/1554978482652.png","index":12,"caption_template":"图：_CAPTION_","label":"1554978482652","attributes":{},"skip":false,"key":"1.8.12"},{"backlink":"./docs/06.html#fig1.8.13","level":"1.8","list_caption":"Figure: 1554978514321","alt":"1554978514321","nro":122,"url":"images/1554978514321.png","index":13,"caption_template":"图：_CAPTION_","label":"1554978514321","attributes":{},"skip":false,"key":"1.8.13"},{"backlink":"./docs/06.html#fig1.8.14","level":"1.8","list_caption":"Figure: 1554978684947","alt":"1554978684947","nro":123,"url":"images/1554978684947.png","index":14,"caption_template":"图：_CAPTION_","label":"1554978684947","attributes":{},"skip":false,"key":"1.8.14"},{"backlink":"./docs/06.html#fig1.8.15","level":"1.8","list_caption":"Figure: 1554978690764","alt":"1554978690764","nro":124,"url":"images/1554978690764.png","index":15,"caption_template":"图：_CAPTION_","label":"1554978690764","attributes":{},"skip":false,"key":"1.8.15"},{"backlink":"./docs/06.html#fig1.8.16","level":"1.8","list_caption":"Figure: 1554978955659","alt":"1554978955659","nro":125,"url":"images/1554978955659.png","index":16,"caption_template":"图：_CAPTION_","label":"1554978955659","attributes":{},"skip":false,"key":"1.8.16"},{"backlink":"./docs/06.html#fig1.8.17","level":"1.8","list_caption":"Figure: 1554979073996","alt":"1554979073996","nro":126,"url":"images/1554979073996.png","index":17,"caption_template":"图：_CAPTION_","label":"1554979073996","attributes":{},"skip":false,"key":"1.8.17"},{"backlink":"./docs/06.html#fig1.8.18","level":"1.8","list_caption":"Figure: 1554979079395","alt":"1554979079395","nro":127,"url":"images/1554979079395.png","index":18,"caption_template":"图：_CAPTION_","label":"1554979079395","attributes":{},"skip":false,"key":"1.8.18"},{"backlink":"./docs/06.html#fig1.8.19","level":"1.8","list_caption":"Figure: 1554979110008","alt":"1554979110008","nro":128,"url":"images/1554979110008.png","index":19,"caption_template":"图：_CAPTION_","label":"1554979110008","attributes":{},"skip":false,"key":"1.8.19"},{"backlink":"./docs/06.html#fig1.8.20","level":"1.8","list_caption":"Figure: 1554979115642","alt":"1554979115642","nro":129,"url":"images/1554979115642.png","index":20,"caption_template":"图：_CAPTION_","label":"1554979115642","attributes":{},"skip":false,"key":"1.8.20"},{"backlink":"./docs/06.html#fig1.8.21","level":"1.8","list_caption":"Figure: 1554979200961","alt":"1554979200961","nro":130,"url":"images/1554979200961.png","index":21,"caption_template":"图：_CAPTION_","label":"1554979200961","attributes":{},"skip":false,"key":"1.8.21"},{"backlink":"./docs/06.html#fig1.8.22","level":"1.8","list_caption":"Figure: 1554979243194","alt":"1554979243194","nro":131,"url":"images/1554979243194.png","index":22,"caption_template":"图：_CAPTION_","label":"1554979243194","attributes":{},"skip":false,"key":"1.8.22"},{"backlink":"./docs/06.html#fig1.8.23","level":"1.8","list_caption":"Figure: 1554979317187","alt":"1554979317187","nro":132,"url":"images/1554979317187.png","index":23,"caption_template":"图：_CAPTION_","label":"1554979317187","attributes":{},"skip":false,"key":"1.8.23"},{"backlink":"./docs/06.html#fig1.8.24","level":"1.8","list_caption":"Figure: 1554979343634","alt":"1554979343634","nro":133,"url":"images/1554979343634.png","index":24,"caption_template":"图：_CAPTION_","label":"1554979343634","attributes":{},"skip":false,"key":"1.8.24"},{"backlink":"./docs/06.html#fig1.8.25","level":"1.8","list_caption":"Figure: 1554979255233","alt":"1554979255233","nro":134,"url":"images/1554979255233.png","index":25,"caption_template":"图：_CAPTION_","label":"1554979255233","attributes":{},"skip":false,"key":"1.8.25"},{"backlink":"./docs/07.html#fig1.9.1","level":"1.9","list_caption":"Figure: 1554979529525","alt":"1554979529525","nro":135,"url":"images/1554979529525.png","index":1,"caption_template":"图：_CAPTION_","label":"1554979529525","attributes":{},"skip":false,"key":"1.9.1"},{"backlink":"./docs/07.html#fig1.9.2","level":"1.9","list_caption":"Figure: 1555433204337","alt":"1555433204337","nro":136,"url":"images/1555433204337.png","index":2,"caption_template":"图：_CAPTION_","label":"1555433204337","attributes":{},"skip":false,"key":"1.9.2"},{"backlink":"./docs/07.html#fig1.9.3","level":"1.9","list_caption":"Figure: image-20211025162304844","alt":"image-20211025162304844","nro":137,"url":"images/image-20211025162304844.png","index":3,"caption_template":"图：_CAPTION_","label":"image-20211025162304844","attributes":{},"skip":false,"key":"1.9.3"},{"backlink":"./docs/07.html#fig1.9.4","level":"1.9","list_caption":"Figure: image-20211025162538958","alt":"image-20211025162538958","nro":138,"url":"images/image-20211025162538958.png","index":4,"caption_template":"图：_CAPTION_","label":"image-20211025162538958","attributes":{},"skip":false,"key":"1.9.4"},{"backlink":"./docs/07.html#fig1.9.5","level":"1.9","list_caption":"Figure: image-20211025162730421","alt":"image-20211025162730421","nro":139,"url":"images/image-20211025162730421.png","index":5,"caption_template":"图：_CAPTION_","label":"image-20211025162730421","attributes":{},"skip":false,"key":"1.9.5"},{"backlink":"./docs/07.html#fig1.9.6","level":"1.9","list_caption":"Figure: image-20211025163846974","alt":"image-20211025163846974","nro":140,"url":"images/image-20211025163846974.png","index":6,"caption_template":"图：_CAPTION_","label":"image-20211025163846974","attributes":{},"skip":false,"key":"1.9.6"},{"backlink":"./docs/07.html#fig1.9.7","level":"1.9","list_caption":"Figure: image-20211025193742633","alt":"image-20211025193742633","nro":141,"url":"images/image-20211025193742633.png","index":7,"caption_template":"图：_CAPTION_","label":"image-20211025193742633","attributes":{},"skip":false,"key":"1.9.7"},{"backlink":"./docs/07.html#fig1.9.8","level":"1.9","list_caption":"Figure: image-20211025213504115","alt":"image-20211025213504115","nro":142,"url":"images/image-20211025213504115.png","index":8,"caption_template":"图：_CAPTION_","label":"image-20211025213504115","attributes":{},"skip":false,"key":"1.9.8"},{"backlink":"./docs/07.html#fig1.9.9","level":"1.9","list_caption":"Figure: image-20211025214818623","alt":"image-20211025214818623","nro":143,"url":"images/image-20211025214818623.png","index":9,"caption_template":"图：_CAPTION_","label":"image-20211025214818623","attributes":{},"skip":false,"key":"1.9.9"},{"backlink":"./docs/07.html#fig1.9.10","level":"1.9","list_caption":"Figure: image-20211012142639469","alt":"image-20211012142639469","nro":144,"url":"images/image-20211012142639469.png","index":10,"caption_template":"图：_CAPTION_","label":"image-20211012142639469","attributes":{},"skip":false,"key":"1.9.10"},{"backlink":"./docs/07.html#fig1.9.11","level":"1.9","list_caption":"Figure: image-20211012142746444","alt":"image-20211012142746444","nro":145,"url":"images/image-20211012142746444.png","index":11,"caption_template":"图：_CAPTION_","label":"image-20211012142746444","attributes":{},"skip":false,"key":"1.9.11"},{"backlink":"./docs/07.html#fig1.9.12","level":"1.9","list_caption":"Figure: image-20211012143203355","alt":"image-20211012143203355","nro":146,"url":"images/image-20211012143203355.png","index":12,"caption_template":"图：_CAPTION_","label":"image-20211012143203355","attributes":{},"skip":false,"key":"1.9.12"},{"backlink":"./docs/07.html#fig1.9.13","level":"1.9","list_caption":"Figure: image-20211012145231321","alt":"image-20211012145231321","nro":147,"url":"images/image-20211012145231321.png","index":13,"caption_template":"图：_CAPTION_","label":"image-20211012145231321","attributes":{},"skip":false,"key":"1.9.13"},{"backlink":"./docs/07.html#fig1.9.14","level":"1.9","list_caption":"Figure: 1554980865631","alt":"1554980865631","nro":148,"url":"images/1554980865631.png","index":14,"caption_template":"图：_CAPTION_","label":"1554980865631","attributes":{},"skip":false,"key":"1.9.14"},{"backlink":"./docs/08.html#fig1.10.1","level":"1.10","list_caption":"Figure: 1554980924940","alt":"1554980924940","nro":149,"url":"images/1554980924940.png","index":1,"caption_template":"图：_CAPTION_","label":"1554980924940","attributes":{},"skip":false,"key":"1.10.1"},{"backlink":"./docs/08.html#fig1.10.2","level":"1.10","list_caption":"Figure: 1554981029920","alt":"1554981029920","nro":150,"url":"images/1554981029920.png","index":2,"caption_template":"图：_CAPTION_","label":"1554981029920","attributes":{},"skip":false,"key":"1.10.2"},{"backlink":"./docs/08.html#fig1.10.3","level":"1.10","list_caption":"Figure: 1554981279723","alt":"1554981279723","nro":151,"url":"images/1554981279723.png","index":3,"caption_template":"图：_CAPTION_","label":"1554981279723","attributes":{},"skip":false,"key":"1.10.3"},{"backlink":"./docs/08.html#fig1.10.4","level":"1.10","list_caption":"Figure: 1554981253194","alt":"1554981253194","nro":152,"url":"images/1554981253194.png","index":4,"caption_template":"图：_CAPTION_","label":"1554981253194","attributes":{},"skip":false,"key":"1.10.4"},{"backlink":"./docs/08.html#fig1.10.5","level":"1.10","list_caption":"Figure: 1554981241299","alt":"1554981241299","nro":153,"url":"images/1554981241299.png","index":5,"caption_template":"图：_CAPTION_","label":"1554981241299","attributes":{},"skip":false,"key":"1.10.5"},{"backlink":"./docs/08.html#fig1.10.6","level":"1.10","list_caption":"Figure: 1554981328678","alt":"1554981328678","nro":154,"url":"images/1554981328678.png","index":6,"caption_template":"图：_CAPTION_","label":"1554981328678","attributes":{},"skip":false,"key":"1.10.6"},{"backlink":"./docs/08.html#fig1.10.7","level":"1.10","list_caption":"Figure: 1554981374920","alt":"1554981374920","nro":155,"url":"images/1554981374920.png","index":7,"caption_template":"图：_CAPTION_","label":"1554981374920","attributes":{},"skip":false,"key":"1.10.7"},{"backlink":"./docs/08.html#fig1.10.8","level":"1.10","list_caption":"Figure: 1554981539408","alt":"1554981539408","nro":156,"url":"images/1554981539408.png","index":8,"caption_template":"图：_CAPTION_","label":"1554981539408","attributes":{},"skip":false,"key":"1.10.8"},{"backlink":"./docs/08.html#fig1.10.9","level":"1.10","list_caption":"Figure: 1554981544191","alt":"1554981544191","nro":157,"url":"images/1554981544191.png","index":9,"caption_template":"图：_CAPTION_","label":"1554981544191","attributes":{},"skip":false,"key":"1.10.9"},{"backlink":"./docs/08.html#fig1.10.10","level":"1.10","list_caption":"Figure: 1554981574152","alt":"1554981574152","nro":158,"url":"images/1554981574152.png","index":10,"caption_template":"图：_CAPTION_","label":"1554981574152","attributes":{},"skip":false,"key":"1.10.10"},{"backlink":"./docs/08.html#fig1.10.11","level":"1.10","list_caption":"Figure: 1554981607442","alt":"1554981607442","nro":159,"url":"images/1554981607442.png","index":11,"caption_template":"图：_CAPTION_","label":"1554981607442","attributes":{},"skip":false,"key":"1.10.11"},{"backlink":"./docs/08.html#fig1.10.12","level":"1.10","list_caption":"Figure: 1554981624864","alt":"1554981624864","nro":160,"url":"images/1554981624864.png","index":12,"caption_template":"图：_CAPTION_","label":"1554981624864","attributes":{},"skip":false,"key":"1.10.12"},{"backlink":"./docs/08.html#fig1.10.13","level":"1.10","list_caption":"Figure: 1554981629733","alt":"1554981629733","nro":161,"url":"images/1554981629733.png","index":13,"caption_template":"图：_CAPTION_","label":"1554981629733","attributes":{},"skip":false,"key":"1.10.13"},{"backlink":"./docs/08.html#fig1.10.14","level":"1.10","list_caption":"Figure: 1554981656798","alt":"1554981656798","nro":162,"url":"images/1554981656798.png","index":14,"caption_template":"图：_CAPTION_","label":"1554981656798","attributes":{},"skip":false,"key":"1.10.14"},{"backlink":"./docs/08.html#fig1.10.15","level":"1.10","list_caption":"Figure: 1554981808091","alt":"1554981808091","nro":163,"url":"images/1554981808091.png","index":15,"caption_template":"图：_CAPTION_","label":"1554981808091","attributes":{},"skip":false,"key":"1.10.15"},{"backlink":"./docs/08.html#fig1.10.16","level":"1.10","list_caption":"Figure: 1554981824564","alt":"1554981824564","nro":164,"url":"images/1554981824564.png","index":16,"caption_template":"图：_CAPTION_","label":"1554981824564","attributes":{},"skip":false,"key":"1.10.16"},{"backlink":"./docs/08.html#fig1.10.17","level":"1.10","list_caption":"Figure: 1566872301088","alt":"1566872301088","nro":165,"url":"images/1566872301088.png","index":17,"caption_template":"图：_CAPTION_","label":"1566872301088","attributes":{},"skip":false,"key":"1.10.17"},{"backlink":"./docs/09.html#fig1.11.1","level":"1.11","list_caption":"Figure: 1554991034688","alt":"1554991034688","nro":166,"url":"images/1554991034688.png","index":1,"caption_template":"图：_CAPTION_","label":"1554991034688","attributes":{},"skip":false,"key":"1.11.1"},{"backlink":"./docs/09.html#fig1.11.2","level":"1.11","list_caption":"Figure: 1554991054388","alt":"1554991054388","nro":167,"url":"images/1554991054388.png","index":2,"caption_template":"图：_CAPTION_","label":"1554991054388","attributes":{},"skip":false,"key":"1.11.2"},{"backlink":"./docs/09.html#fig1.11.3","level":"1.11","list_caption":"Figure: 1554991538719","alt":"1554991538719","nro":168,"url":"images/1554991538719.png","index":3,"caption_template":"图：_CAPTION_","label":"1554991538719","attributes":{},"skip":false,"key":"1.11.3"},{"backlink":"./docs/09.html#fig1.11.4","level":"1.11","list_caption":"Figure: 1554991555669","alt":"1554991555669","nro":169,"url":"images/1554991555669.png","index":4,"caption_template":"图：_CAPTION_","label":"1554991555669","attributes":{},"skip":false,"key":"1.11.4"},{"backlink":"./docs/09.html#fig1.11.5","level":"1.11","list_caption":"Figure: 1554991892770","alt":"1554991892770","nro":170,"url":"images/1554991892770.png","index":5,"caption_template":"图：_CAPTION_","label":"1554991892770","attributes":{},"skip":false,"key":"1.11.5"},{"backlink":"./docs/09.html#fig1.11.6","level":"1.11","list_caption":"Figure: 1554991935186","alt":"1554991935186","nro":171,"url":"images/1554991935186.png","index":6,"caption_template":"图：_CAPTION_","label":"1554991935186","attributes":{},"skip":false,"key":"1.11.6"},{"backlink":"./docs/09.html#fig1.11.7","level":"1.11","list_caption":"Figure: 1554992067381","alt":"1554992067381","nro":172,"url":"images/1554992067381.png","index":7,"caption_template":"图：_CAPTION_","label":"1554992067381","attributes":{},"skip":false,"key":"1.11.7"},{"backlink":"./docs/09.html#fig1.11.8","level":"1.11","list_caption":"Figure: 1554992135819","alt":"1554992135819","nro":173,"url":"images/1554992135819.png","index":8,"caption_template":"图：_CAPTION_","label":"1554992135819","attributes":{},"skip":false,"key":"1.11.8"},{"backlink":"./docs/09.html#fig1.11.9","level":"1.11","list_caption":"Figure: 1554992658876","alt":"1554992658876","nro":174,"url":"images/1554992658876.png","index":9,"caption_template":"图：_CAPTION_","label":"1554992658876","attributes":{},"skip":false,"key":"1.11.9"},{"backlink":"./docs/09.html#fig1.11.10","level":"1.11","list_caption":"Figure: 1554992664594","alt":"1554992664594","nro":175,"url":"images/1554992664594.png","index":10,"caption_template":"图：_CAPTION_","label":"1554992664594","attributes":{},"skip":false,"key":"1.11.10"},{"backlink":"./docs/09.html#fig1.11.11","level":"1.11","list_caption":"Figure: 1554992668429","alt":"1554992668429","nro":176,"url":"images/1554992668429.png","index":11,"caption_template":"图：_CAPTION_","label":"1554992668429","attributes":{},"skip":false,"key":"1.11.11"},{"backlink":"./docs/09.html#fig1.11.12","level":"1.11","list_caption":"Figure: 1554992753654","alt":"1554992753654","nro":177,"url":"images/1554992753654.png","index":12,"caption_template":"图：_CAPTION_","label":"1554992753654","attributes":{},"skip":false,"key":"1.11.12"},{"backlink":"./docs/09.html#fig1.11.13","level":"1.11","list_caption":"Figure: 1554992759467","alt":"1554992759467","nro":178,"url":"images/1554992759467.png","index":13,"caption_template":"图：_CAPTION_","label":"1554992759467","attributes":{},"skip":false,"key":"1.11.13"},{"backlink":"./docs/09.html#fig1.11.14","level":"1.11","list_caption":"Figure: 1554992898234","alt":"1554992898234","nro":179,"url":"images/1554992898234.png","index":14,"caption_template":"图：_CAPTION_","label":"1554992898234","attributes":{},"skip":false,"key":"1.11.14"},{"backlink":"./docs/09.html#fig1.11.15","level":"1.11","list_caption":"Figure: 1554992925281","alt":"1554992925281","nro":180,"url":"images/1554992925281.png","index":15,"caption_template":"图：_CAPTION_","label":"1554992925281","attributes":{},"skip":false,"key":"1.11.15"},{"backlink":"./docs/09.html#fig1.11.16","level":"1.11","list_caption":"Figure: 1554992986225","alt":"1554992986225","nro":181,"url":"images/1554992986225.png","index":16,"caption_template":"图：_CAPTION_","label":"1554992986225","attributes":{},"skip":false,"key":"1.11.16"},{"backlink":"./docs/09.html#fig1.11.17","level":"1.11","list_caption":"Figure: 1554993169269","alt":"1554993169269","nro":182,"url":"images/1554993169269.png","index":17,"caption_template":"图：_CAPTION_","label":"1554993169269","attributes":{},"skip":false,"key":"1.11.17"},{"backlink":"./docs/10.html#fig1.12.1","level":"1.12","list_caption":"Figure: image-20211007155810920","alt":"image-20211007155810920","nro":183,"url":"images/image-20211007155810920.png","index":1,"caption_template":"图：_CAPTION_","label":"image-20211007155810920","attributes":{},"skip":false,"key":"1.12.1"},{"backlink":"./docs/10.html#fig1.12.2","level":"1.12","list_caption":"Figure: image-20211016160643445","alt":"image-20211016160643445","nro":184,"url":"images/image-20211016160643445.png","index":2,"caption_template":"图：_CAPTION_","label":"image-20211016160643445","attributes":{},"skip":false,"key":"1.12.2"},{"backlink":"./docs/10.html#fig1.12.3","level":"1.12","list_caption":"Figure: 1554997882872","alt":"1554997882872","nro":185,"url":"images/1554997882872.png","index":3,"caption_template":"图：_CAPTION_","label":"1554997882872","attributes":{},"skip":false,"key":"1.12.3"},{"backlink":"./docs/10.html#fig1.12.4","level":"1.12","list_caption":"Figure: 1554998139815","alt":"1554998139815","nro":186,"url":"images/1554998139815.png","index":4,"caption_template":"图：_CAPTION_","label":"1554998139815","attributes":{},"skip":false,"key":"1.12.4"},{"backlink":"./docs/10.html#fig1.12.5","level":"1.12","list_caption":"Figure: image-20211024012735469","alt":"image-20211024012735469","nro":187,"url":"images/image-20211024012735469.png","index":5,"caption_template":"图：_CAPTION_","label":"image-20211024012735469","attributes":{},"skip":false,"key":"1.12.5"},{"backlink":"./docs/11.html#fig1.13.1","level":"1.13","list_caption":"Figure: 1555425366064","alt":"1555425366064","nro":188,"url":"images/1555425366064.png","index":1,"caption_template":"图：_CAPTION_","label":"1555425366064","attributes":{},"skip":false,"key":"1.13.1"},{"backlink":"./docs/11.html#fig1.13.2","level":"1.13","list_caption":"Figure: 1555425824246","alt":"1555425824246","nro":189,"url":"images/1555425824246.png","index":2,"caption_template":"图：_CAPTION_","label":"1555425824246","attributes":{},"skip":false,"key":"1.13.2"},{"backlink":"./docs/11.html#fig1.13.3","level":"1.13","list_caption":"Figure: 1555426124751","alt":"1555426124751","nro":190,"url":"images/1555426124751.png","index":3,"caption_template":"图：_CAPTION_","label":"1555426124751","attributes":{},"skip":false,"key":"1.13.3"},{"backlink":"./docs/11.html#fig1.13.4","level":"1.13","list_caption":"Figure: 1555426162264","alt":"1555426162264","nro":191,"url":"images/1555426162264.png","index":4,"caption_template":"图：_CAPTION_","label":"1555426162264","attributes":{},"skip":false,"key":"1.13.4"},{"backlink":"./docs/12.html#fig1.14.1","level":"1.14","list_caption":"Figure: image-20211007173312237","alt":"image-20211007173312237","nro":192,"url":"images/image-20211007173312237.png","index":1,"caption_template":"图：_CAPTION_","label":"image-20211007173312237","attributes":{},"skip":false,"key":"1.14.1"},{"backlink":"./docs/12.html#fig1.14.2","level":"1.14","list_caption":"Figure: image-20211012003508730","alt":"image-20211012003508730","nro":193,"url":"images/image-20211012003508730.png","index":2,"caption_template":"图：_CAPTION_","label":"image-20211012003508730","attributes":{},"skip":false,"key":"1.14.2"},{"backlink":"./docs/12.html#fig1.14.3","level":"1.14","list_caption":"Figure: image-20211104192516324","alt":"image-20211104192516324","nro":194,"url":"images/image-20211104192516324.png","index":3,"caption_template":"图：_CAPTION_","label":"image-20211104192516324","attributes":{},"skip":false,"key":"1.14.3"},{"backlink":"./docs/12.html#fig1.14.4","level":"1.14","list_caption":"Figure: image-20211104192912988","alt":"image-20211104192912988","nro":195,"url":"images/image-20211104192912988.png","index":4,"caption_template":"图：_CAPTION_","label":"image-20211104192912988","attributes":{},"skip":false,"key":"1.14.4"},{"backlink":"./docs/12.html#fig1.14.5","level":"1.14","list_caption":"Figure: image-20211104193330204","alt":"image-20211104193330204","nro":196,"url":"images/image-20211104193330204.png","index":5,"caption_template":"图：_CAPTION_","label":"image-20211104193330204","attributes":{},"skip":false,"key":"1.14.5"},{"backlink":"./docs/13.html#fig1.15.1","level":"1.15","list_caption":"Figure: 1555426972098","alt":"1555426972098","nro":197,"url":"images/1555426972098.png","index":1,"caption_template":"图：_CAPTION_","label":"1555426972098","attributes":{},"skip":false,"key":"1.15.1"},{"backlink":"./docs/13.html#fig1.15.2","level":"1.15","list_caption":"Figure: 1555427492244","alt":"1555427492244","nro":198,"url":"images/1555427492244.png","index":2,"caption_template":"图：_CAPTION_","label":"1555427492244","attributes":{},"skip":false,"key":"1.15.2"},{"backlink":"./docs/13.html#fig1.15.3","level":"1.15","list_caption":"Figure: 1555428214706","alt":"1555428214706","nro":199,"url":"images/1555428214706.png","index":3,"caption_template":"图：_CAPTION_","label":"1555428214706","attributes":{},"skip":false,"key":"1.15.3"},{"backlink":"./docs/14.html#fig1.16.1","level":"1.16","list_caption":"Figure: 1555430281798","alt":"1555430281798","nro":200,"url":"images/1555430281798.png","index":1,"caption_template":"图：_CAPTION_","label":"1555430281798","attributes":{},"skip":false,"key":"1.16.1"},{"backlink":"./docs/14.html#fig1.16.2","level":"1.16","list_caption":"Figure: image-20211006211206990","alt":"image-20211006211206990","nro":201,"url":"images/image-20211006211206990.png","index":2,"caption_template":"图：_CAPTION_","label":"image-20211006211206990","attributes":{},"skip":false,"key":"1.16.2"},{"backlink":"./docs/14.html#fig1.16.3","level":"1.16","list_caption":"Figure: 1555430882363","alt":"1555430882363","nro":202,"url":"images/1555430882363.png","index":3,"caption_template":"图：_CAPTION_","label":"1555430882363","attributes":{},"skip":false,"key":"1.16.3"},{"backlink":"./docs/14.html#fig1.16.4","level":"1.16","list_caption":"Figure: image-20211010211744459","alt":"image-20211010211744459","nro":203,"url":"images/image-20211010211744459.png","index":4,"caption_template":"图：_CAPTION_","label":"image-20211010211744459","attributes":{},"skip":false,"key":"1.16.4"},{"backlink":"./docs/16.html#fig1.18.1","level":"1.18","list_caption":"Figure: image-20211108114846634","alt":"image-20211108114846634","nro":204,"url":"images/image-20211108114846634.png","index":1,"caption_template":"图：_CAPTION_","label":"image-20211108114846634","attributes":{},"skip":false,"key":"1.18.1"},{"backlink":"./docs/18.html#fig1.20.1","level":"1.20","list_caption":"Figure: image-20210730165317542","alt":"image-20210730165317542","nro":205,"url":"images/image-20210730165317542.png","index":1,"caption_template":"图：_CAPTION_","label":"image-20210730165317542","attributes":{},"skip":false,"key":"1.20.1"},{"backlink":"./docs/18.html#fig1.20.2","level":"1.20","list_caption":"Figure: image-20211012162944536","alt":"image-20211012162944536","nro":206,"url":"images/image-20211012162944536.png","index":2,"caption_template":"图：_CAPTION_","label":"image-20211012162944536","attributes":{},"skip":false,"key":"1.20.2"}]},"title":"MySQL 基础教案","language":"zh-hans","gitbook":"*","description":"MySQL 基础教案"},"file":{"path":"docs/13.md","mtime":"2023-01-15T09:29:28.230Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-01-15T09:33:24.036Z"},"basePath":"..","book":{"language":""}});
+        });</script></div><script src="../gitbook/gitbook.js"></script><script src="../gitbook/theme.js"></script><script src="../gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script><script src="../gitbook/gitbook-plugin-search-plus/search.js"></script><script src="../gitbook/gitbook-plugin-splitter/splitter.js"></script><script src="../gitbook/gitbook-plugin-fancybox/jquery.min.js"></script><script src="../gitbook/gitbook-plugin-fancybox/jquery.mousewheel.pack.js"></script><script src="../gitbook/gitbook-plugin-fancybox/jquery.fancybox.pack.js"></script><script src="../gitbook/gitbook-plugin-fancybox/jquery.fancybox-buttons.js"></script><script src="../gitbook/gitbook-plugin-fancybox/plugin.js"></script><script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script></body></html>
