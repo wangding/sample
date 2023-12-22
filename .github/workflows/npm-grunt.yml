@@ -30,7 +30,7 @@ jobs:
       run: mkdir dist
 
     - name: move directory
-      run: mv images img-svg nodejs spa testing web selenium dbms mysql01 dist
+      run: mv images img-svg nodejs spa testing web selenium dbms mysql01 docs dist
 
     - name: upload
       run: npx grunt upload
