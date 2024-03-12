@@ -1,23 +1,23 @@
 drop database if exists set_demo;
-
 create database set_demo;
 
 use set_demo;
-
-drop table if exists set_a;
 
 create table set_a (
   m int,
   n int
 );
 
-insert into set_a(m, n) values (1, 2), (2, 3), (3, 4);
-
-drop table if exists set_b;
-
 create table set_b (
   m int,
   n int
 );
 
-insert into set_b(m, n) values (1, 2), (1, 3), (3, 4);
+create table set_c (
+  c1 char(1),
+  c2 char(1)
+);
+
+insert into set_a values (1, 2), (2, 3), (3, 4);
+insert into set_b values (1, 2), (1, 3), (3, 4);
+insert into set_c values ('a', 'x'), ('b', 'y'), ('c', 'z');
